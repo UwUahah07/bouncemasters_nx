@@ -124,7 +124,7 @@ void bm_time_tick(void);
  * Both are what a C function returning the same struct types produces. */
 #define BMM_RVA_Input_get_mousePosition  0x35d92acu
 #define BMM_G3_Input_get_mousePosition   { 0xd10083ffu, 0xa9014ffeu, 0xf00048f3u }
-#define BMM_RVA_Input_GetTouch           0x0u
+#define BMM_RVA_Input_GetTouch           0x35d8ff0u
 #define BMM_G3_Input_GetTouch            { 0xd101c3ffu, 0xa90557feu, 0xa9064ff4u }
 
 /* ---- UnityEngine.Input ---- */
@@ -142,8 +142,8 @@ void bm_time_tick(void);
 #define BMM_G3_Input_GetMouseButtonDown                { 0xf81e0ffeu, 0xa9014ff4u, 0x90004914u }
 #define BMM_RVA_Input_GetMouseButtonUp                 0x35d8f8cu
 #define BMM_G3_Input_GetMouseButtonUp                  { 0xf81e0ffeu, 0xa9014ff4u, 0x90004914u }
-#define BMM_RVA_Input_GetTouch_Injected                0x35d8ff0u
-#define BMM_G3_Input_GetTouch_Injected                 { 0xd101c3ffu, 0xa90557feu, 0xa9064ff4u }
+#define BMM_RVA_Input_GetTouch_Injected                0x35d9060u
+#define BMM_G3_Input_GetTouch_Injected                 { 0xa9be57feu, 0xa9014ff4u, 0xf00048f5u }
 #define BMM_RVA_Input_get_anyKey                       0x35d9284u
 #define BMM_G3_Input_get_anyKey                        { 0xa9bf4ffeu, 0xf00048f3u, 0xf945aa60u }
 
