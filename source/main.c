@@ -597,7 +597,7 @@ int main(int argc, char *argv[]) {
 
   diag_thread_register(NULL, 1);          /* this is the engine main thread */
   diag_set_name(NULL, "openbonk-main");
-  diag_watchdog_start();                  /* backtrace if a frame wedges */
+  // diag_watchdog_start();                  /* backtrace if a frame wedges */
 
   int rc = bm_boot_and_run();
 
