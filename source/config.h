@@ -14,7 +14,7 @@
  *     the end of its libunity mapping, so touching them would fault. The goal of
  *     build 0 is only to see in debug.log how far the engine gets by itself.
  * Re-derive the offsets one by one and switch the pieces back on. */
-#define OB_BRINGUP 1
+#define OB_BRINGUP 0
 
 #include "bm_offsets.h"
 
