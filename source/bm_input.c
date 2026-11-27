@@ -43,6 +43,7 @@
  * ------------------------------------------------------------------------- */
 
 #include <stdint.h>
+#include <switch.h>
 #include <string.h>
 
 #include "bm_managed.h"
@@ -279,6 +280,50 @@ static int32_t bmi_GetMouseButtonUp(int32_t button) {
 static int32_t bmi_anyKey(void)     { refresh(); return bm_touch_any_down(); }
 static int32_t bmi_anyKeyDown(void) { return bmi_GetMouseButtonDown(0); }
 
+
+/* Switch gamepad -> Unity KeyCode mapping for OpenBonk */
+static int keycode_held(int32_t kc) {
+  static PadState pad;
+  static int inited = 0;
+  if (!inited) { padInitializeDefault(&pad); inited = 1; }
+  padUpdate(&pad);
+  u64 h = padGetButtons(&pad);
+  HidAnalogStickState ls = padGetStickPos(&pad, 0);
+  const int dz = 8000;
+  switch (kc) {
+    case 119: case 273: return ls.y >  dz || (h & HidNpadButton_Up);     /* W / Up */
+    case 115: case 274: return ls.y < -dz || (h & HidNpadButton_Down);   /* S / Down */
+    case 97:  case 276: return ls.x < -dz || (h & HidNpadButton_Left);   /* A / Left */
+    case 100: case 275: return ls.x >  dz || (h & HidNpadButton_Right);  /* D / Right */
+    case 13:  return (h & HidNpadButton_A)  != 0;                        /* Return -> A */
+    case 32:  return (h & HidNpadButton_B)  != 0;                        /* Space  -> B (Jump) */
+    case 27:  return (h & HidNpadButton_Y)  != 0;                        /* Escape -> Y (Pause) */
+    case 113: case 9: return (h & HidNpadButton_X) != 0;                 /* Q/Tab  -> X */
+    case 101: case 102: return (h & HidNpadButton_ZR) != 0;              /* E/F    -> ZR (Interact) */
+    case 304: return (h & HidNpadButton_ZL) != 0;                        /* LShift -> ZL */
+    default:  return 0;
+  }
+}
+
+static uint8_t g_kc_prev[512];
+static int32_t bmi_GetKeyInt(int32_t kc) {
+  int v = keycode_held(kc);
+  if (kc >= 0 && kc < 512) g_kc_prev[kc] = (uint8_t)v;
+  return v;
+}
+static int32_t bmi_GetKeyDownInt(int32_t kc) {
+  int v = keycode_held(kc);
+  int prev = (kc >= 0 && kc < 512) ? g_kc_prev[kc] : 0;
+  if (kc >= 0 && kc < 512) g_kc_prev[kc] = (uint8_t)v;
+  return v && !prev;
+}
+static int32_t bmi_GetKeyUpInt(int32_t kc) {
+  int v = keycode_held(kc);
+  int prev = (kc >= 0 && kc < 512) ? g_kc_prev[kc] : 0;
+  if (kc >= 0 && kc < 512) g_kc_prev[kc] = (uint8_t)v;
+  return !v && prev;
+}
+
 /* ---------------------------------------------------------------- install */
 
 int bm_input_install(so_module *il2cpp) {
@@ -324,7 +369,13 @@ int bm_input_install(so_module *il2cpp) {
   n += bm_managed_hook(il2cpp, "Input.GetTouch           [REAL]",
                        BMM_RVA_Input_GetTouch,          g_gt2, (void *)&bmi_GetTouch);
 
-  debugPrintf("[input] %d/12 Input accessors hooked (touch + mouse emulation)\n", n);
+  static const uint32_t g_gki [3] = BMM_G3_Input_GetKeyInt;
+  static const uint32_t g_gkd [3] = BMM_G3_Input_GetKeyDownInt;
+  static const uint32_t g_gku [3] = BMM_G3_Input_GetKeyUpInt;
+  n += bm_managed_hook(il2cpp, "Input.GetKeyInt",     BMM_RVA_Input_GetKeyInt,     g_gki, (void *)&bmi_GetKeyInt);
+  n += bm_managed_hook(il2cpp, "Input.GetKeyDownInt", BMM_RVA_Input_GetKeyDownInt, g_gkd, (void *)&bmi_GetKeyDownInt);
+  n += bm_managed_hook(il2cpp, "Input.GetKeyUpInt",   BMM_RVA_Input_GetKeyUpInt,   g_gku, (void *)&bmi_GetKeyUpInt);
+  debugPrintf("[input] %d/15 Input accessors hooked (touch + mouse emulation)\n", n);
   if (n == 0)
     debugPrintf("[input] NONE installed -- the game will be unplayable. Regenerate\n"
                 "        bm_managed.h from a dump.cs matching THIS libil2cpp.\n");
