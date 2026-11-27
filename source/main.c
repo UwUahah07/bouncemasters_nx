@@ -522,10 +522,10 @@ int main(int argc, char *argv[]) {
    * Each verifies three guard words and skips itself on a mismatch, so a stale
    * bm_managed.h costs the feature rather than corrupting an unrelated method. */
 #if !OB_BRINGUP
-   bm_time_install(&il2cpp_mod);
-   bm_input_install(&il2cpp_mod);
-   bm_screen_install(&il2cpp_mod);
-  // bm_prefs_install(&il2cpp_mod);
+  bm_time_install(&il2cpp_mod);
+  bm_input_install(&il2cpp_mod);
+  bm_screen_install(&il2cpp_mod);
+  bm_prefs_install(&il2cpp_mod);
   /* Bouncemasters-only SDK/loading hooks (absent in OpenBonk):
    *   bm_eos_managed_install(&il2cpp_mod);
    *   bm_maxads_install(&il2cpp_mod);
@@ -543,8 +543,8 @@ int main(int argc, char *argv[]) {
    * page-aligned requests of this size class is libdrm_nouveau. */
   bm_gpua_enable();
 
-  cpu_boost(0);
-  debugPrintf("[boot] CPU boost OFF (load path complete)\n");
+  /* Keep CPU boost ON so asset decompression & texture upload don't take minutes */
+  debugPrintf("[boot] CPU boost kept ON for scene/asset loading\n");
 
   diag_thread_register(NULL, 1);          /* this is the engine main thread */
   diag_set_name(NULL, "openbonk-main");
