@@ -392,7 +392,7 @@ int main(int argc, char *argv[]) {
    * scene are all CPU-bound and single-threaded; this is the difference between
    * a boot that feels broken and one that feels slow. Turned off before the
    * frame loop so it does not cost battery for the whole session. */
-  cpu_boost(1);
+  cpu_boost(0);
   debugPrintf("[boot] CPU boost ON for the load path\n");
 
   /* Verify the staged tree BEFORE loading anything. A missing catalog.bin is a
