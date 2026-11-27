@@ -375,11 +375,15 @@ static void oc_setup(void) {
   void *win = NULL;
   size_t win_bytes = (size_t)3072 * 1024 * 1024;
   while (win_bytes >= (size_t)1536 * 1024 * 1024) {
+    size_t req = win_bytes + MMAP_ARENA_ALIGN;
     virtmemLock();
-    win = virtmemFindStackArea(win_bytes, MMAP_ARENA_ALIGN);
-    if (win) oc_res = virtmemAddReservation(win, win_bytes);
+    void *raw_win = virtmemFindStack(req);
+    if (raw_win) oc_res = virtmemAddReservation(raw_win, req);
     virtmemUnlock();
-    if (win && oc_res) break;
+    if (raw_win && oc_res) {
+      win = (void *)(((uintptr_t)raw_win + MMAP_ARENA_ALIGN - 1) & ~(MMAP_ARENA_ALIGN - 1));
+      break;
+    }
     win = NULL;
     win_bytes -= (size_t)512 * 1024 * 1024;
   }
