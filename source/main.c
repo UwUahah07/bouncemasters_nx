@@ -1,3 +1,4 @@
+```c
 /* ---------------------------------------------------------------------------
  * main.c -- entry point, heap layout, module loading, boot sequence.
  *
@@ -525,11 +526,12 @@ int main(int argc, char *argv[]) {
   bm_time_install(&il2cpp_mod);
   bm_input_install(&il2cpp_mod);
   bm_screen_install(&il2cpp_mod);
-  bm_eos_managed_install(&il2cpp_mod);
-  bm_maxads_install(&il2cpp_mod);
-  bm_epiclogin_install(&il2cpp_mod);
   bm_prefs_install(&il2cpp_mod);
-  bm_steptrace_install(&il2cpp_mod);
+  /* Bouncemasters-only SDK/loading hooks (absent in OpenBonk):
+   *   bm_eos_managed_install(&il2cpp_mod);
+   *   bm_maxads_install(&il2cpp_mod);
+   *   bm_epiclogin_install(&il2cpp_mod);
+   *   bm_steptrace_install(&il2cpp_mod); */
 #else
   debugPrintf("[boot] OB_BRINGUP: managed hooks skipped\n");
 #endif
@@ -564,3 +566,4 @@ int main(int argc, char *argv[]) {
   __libnx_exit(0);
   return 0;
 }
+```
