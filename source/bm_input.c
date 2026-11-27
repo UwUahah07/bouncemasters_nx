@@ -376,7 +376,7 @@ static float bmi_MyInput_GetAxis(void *action_str) {
   }
   if (il2cpp_str_eq(action_str, "Look Vertical") ||
       il2cpp_str_eq(action_str, "ControllerLookVertical")) {
-    return ob_stick_norm(rs.y);
+    return -ob_stick_norm(rs.y);
   }
   return 0.0f;
 }
