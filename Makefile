@@ -18,9 +18,9 @@ endif
 TOPDIR ?= $(CURDIR)
 include $(DEVKITPRO)/libnx/switch_rules
 
-TARGET      := bouncemasters_nx
-APP_TITLE   := Bouncemasters
-APP_AUTHOR  := ChanseyIsTheBest
+TARGET      := openbonk_nx
+APP_TITLE   := OpenBonk
+APP_AUTHOR  := openbonk_nx
 APP_VERSION := 1.0.0
 # Icon is OPTIONAL.
 #

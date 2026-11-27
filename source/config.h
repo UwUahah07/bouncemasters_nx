@@ -5,6 +5,17 @@
 #ifndef BM_CONFIG_H
 #define BM_CONFIG_H
 
+/* OPENBONK BRING-UP ("build 0").
+ *
+ * 1 = skip every patch and hook whose address was derived from the
+ *     Bouncemasters libunity.so / libil2cpp.so (granularity, audio, vsync
+ *     block, GC bridge, managed Time/Input/Screen/Prefs hooks). Those RVAs mean
+ *     nothing in OpenBonk's builds (Unity 2023.2.22f1) and some of them lie past
+ *     the end of its libunity mapping, so touching them would fault. The goal of
+ *     build 0 is only to see in debug.log how far the engine gets by itself.
+ * Re-derive the offsets one by one and switch the pieces back on. */
+#define OB_BRINGUP 1
+
 #include "bm_offsets.h"
 
 /* ---------------------------------------------------------------------------
@@ -17,7 +28,7 @@
  * which of the 300-odd stubbed SDK entry points the game actually called, and
  * in what order, and guessing at that from source is a waste of a week.
  * ------------------------------------------------------------------------ */
-#define DEBUG_LOG 0
+#define DEBUG_LOG 1
 
 /* Log every JNI call the engine makes, including the ones that resolve fine.
  * Extremely verbose. Turn on only when chasing a specific hang. */
@@ -46,8 +57,8 @@
  * GAME_HOME + "/debug.log" or early lines land outside the folder the rest of
  * the run uses.
  */
-#define GAME_HOME   "sdmc:/switch/bouncemasters"
-#define LOG_NAME    "sdmc:/switch/bouncemasters/debug.log"
+#define GAME_HOME   "sdmc:/switch/openbonk_nx"
+#define LOG_NAME    "sdmc:/switch/openbonk_nx/debug.log"
 
 /* ---------------------------------------------------------------------------
  * Application identity
@@ -69,9 +80,9 @@
  * against their own configuration, and a mismatch tends to surface as an SDK
  * refusing to initialise rather than as anything that names the package.
  * ------------------------------------------------------------------------ */
-#define CS_PACKAGE       "com.joybits.bouncemasters"
-#define CS_VERSION_NAME  "1.0.0"
-#define CS_VERSION_CODE  42
+#define CS_PACKAGE       "com.megabonk.nativeport.splittest"
+#define CS_VERSION_NAME  "0.1.0"
+#define CS_VERSION_CODE  32
 
 /* assets/bin/Data/unity_app_guid. Unity derives its per-app storage path from
  * this, so it must match the staged data or PlayerPrefs lands somewhere the

@@ -374,7 +374,7 @@ int main(int argc, char *argv[]) {
   bm_resolve_game_root(argc, argv);
 
   socketInitializeDefault();
-  debugPrintf("[boot] === bouncemasters_nx (Unity 6000.0.58f2 / IL2CPP) ===\n");
+  debugPrintf("[boot] === openbonk_nx build 0 (Unity 2023.2.22f1 / IL2CPP) ===\n");
   bm_root_report(argc, argv);
 
   /* Title override leaves the cwd at the .nro folder or at the SD root
@@ -400,7 +400,7 @@ int main(int argc, char *argv[]) {
   if (bm_assets_init() < 0)
     fatal_error("No assets directory under %s.\n\n"
                 "Stage the game from your own APK:\n"
-                "  python3 tools/stage_sd.py Bouncemasters.apk -o out\n"
+                "  copy assets/ from the OpenBonk APK + OBB\n"
                 "then copy out/ next to the .nro.", bm_game_root());
 
   SDL_SetMainReady();
@@ -428,8 +428,14 @@ int main(int argc, char *argv[]) {
    *
    * Set from load_virtbase, not load_base: the offsets in the bridge are
    * virtual addresses within the mapped module. */
+#if OB_BRINGUP
+  /* GC bridge offsets are Bouncemasters-specific; leave it inert (base 0). */
+  g_il2cpp_base = 0;
+  g_il2cpp_size = 0;
+#else
   g_il2cpp_base = (uintptr_t)il2cpp_mod.load_virtbase;
   g_il2cpp_size = il2cpp_mod.load_size;
+#endif
   debugPrintf("[gc] il2cpp base=%p size=%u MB (GC stop-the-world bridge armed)\n",
               il2cpp_mod.load_virtbase, (unsigned)(il2cpp_mod.load_size >> 20));
 
@@ -441,7 +447,11 @@ int main(int argc, char *argv[]) {
   /* Patches go in after finalize (the pages are mapped and executable, and
    * so_patch_code aliases them RW to write) and before any engine code runs.
    * Each one verifies a guard word first; see bm_patches.c. */
+#if !OB_BRINGUP
   bm_apply_patches();
+#else
+  debugPrintf("[boot] OB_BRINGUP: bm_apply_patches() skipped\n");
+#endif
 
   /* MAIN-THREAD BIONIC TLS -- must precede any engine code. */
   static uint8_t main_tls[BIONIC_TLS_SIZE] __attribute__((aligned(16)));
@@ -514,6 +524,7 @@ int main(int argc, char *argv[]) {
    *
    * Each verifies three guard words and skips itself on a mismatch, so a stale
    * bm_managed.h costs the feature rather than corrupting an unrelated method. */
+#if !OB_BRINGUP
   bm_time_install(&il2cpp_mod);
   bm_input_install(&il2cpp_mod);
   bm_screen_install(&il2cpp_mod);
@@ -522,6 +533,9 @@ int main(int argc, char *argv[]) {
   bm_epiclogin_install(&il2cpp_mod);
   bm_prefs_install(&il2cpp_mod);
   bm_steptrace_install(&il2cpp_mod);
+#else
+  debugPrintf("[boot] OB_BRINGUP: managed hooks skipped\n");
+#endif
 
   /* Arm the GPU arena only HERE. Everything before this point -- module
    * loading, relocation, the metadata read -- makes large page-aligned
@@ -535,7 +549,7 @@ int main(int argc, char *argv[]) {
   debugPrintf("[boot] CPU boost OFF (load path complete)\n");
 
   diag_thread_register(NULL, 1);          /* this is the engine main thread */
-  diag_set_name(NULL, "bouncemasters-main");
+  diag_set_name(NULL, "openbonk-main");
   diag_watchdog_start();                  /* backtrace if a frame wedges */
 
   int rc = bm_boot_and_run();

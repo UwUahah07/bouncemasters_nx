@@ -219,24 +219,21 @@ static void walk(const char *abs_dir, const char *rel_prefix, int depth) {
  * walks with readdir/stat and never goes through a shell); it was only the
  * manifest that was wrong. */
 static const char *const REQUIRED[] = {
-  "bin/Data/data.unity3d",
+  "bin/Data/globalgamemanagers",
+  "bin/Data/level0",
   "bin/Data/boot.config",
   "bin/Data/Managed/Metadata/global-metadata.dat",
-  "bin/Data/Resources/unity default resources",
-  "aa/settings.json",
-  "aa/catalog.bin",
 };
 
 /* Present in the APK and read at startup, but a miss is survivable -- these
  * feed SDK paths that bm_sdk_stubs.c already fails cleanly. Worth a warning so
  * an SDK that dies for want of a config file is not mistaken for a stub bug. */
 static const char *const EXPECTED[] = {
-  "aa/catalog.hash",
-  "EOS/EpicOnlineServicesConfig.json",
-  "EOS/eos_android_config.json",
-  "EOS/eos_product_config.json",
-  "google-services-desktop.json",
-  "guids",
+  "bin/Data/unity_app_guid",
+  "bin/Data/RuntimeInitializeOnLoads.json",
+  "bin/Data/ScriptingAssemblies.json",
+  "bin/Data/globalgamemanagers.assets.split0",
+  "bin/Data/sharedassets0.assets.split0",
 };
 
 void bm_assets_report(void) {
@@ -261,12 +258,12 @@ void bm_assets_report(void) {
   if (missing) {
     debugPrintf("[assets] %d required file(s) missing. The game will not boot.\n"
                 "         Re-stage from your own APK:\n"
-                "             python3 tools/stage_sd.py Bouncemasters.apk -o out\n"
-                "         then copy out/ next to the .nro.\n", missing);
+                "             copy assets/ from the APK AND from the OBB\n"
+                "         (merge both into <folder>/assets) next to the .nro.\n", missing);
   } else {
-    int64_t d = bm_assets_size("bin/Data/data.unity3d");
+    int64_t d = bm_assets_size("bin/Data/globalgamemanagers");
     int64_t m = bm_assets_size("bin/Data/Managed/Metadata/global-metadata.dat");
-    debugPrintf("[assets] manifest OK (data.unity3d %lld KB, metadata %lld KB)\n",
+    debugPrintf("[assets] manifest OK (globalgamemanagers %lld KB, metadata %lld KB)\n",
                 (long long)(d / 1024), (long long)(m / 1024));
   }
 }

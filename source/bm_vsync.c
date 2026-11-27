@@ -153,6 +153,13 @@ static uint64_t now_ns(void) {
  * ------------------------------------------------------------------------ */
 int bm_vsync_init(void) {
   if (g_ready) return 0;
+#if OB_BRINGUP
+  /* The vsync block RVAs belong to Bouncemasters' libunity and are not
+   * guard-checked below: writing them here would fault or corrupt OpenBonk's. */
+  { static int told; if (!told) { told = 1;
+      debugPrintf("[vsync] OB_BRINGUP: vsync block not resolved for this build yet\n"); } }
+  return -1;
+#endif
 
   uintptr_t base = (uintptr_t)unity_mod.load_virtbase;
   if (!base) {

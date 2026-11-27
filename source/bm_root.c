@@ -58,12 +58,11 @@ static void adopt(const char *dir) {
  * plain name and a couple of casings: people name the folder after the game,
  * not after the port. */
 static const char *const CANDIDATES[] = {
-  "sdmc:/switch/bouncemasters_nx",
-  "sdmc:/switch/bouncemasters",
-  "sdmc:/switch/Bouncemasters",
-  "sdmc:/switch/Bouncemasters_NX",
-  "sdmc:/bouncemasters_nx",
-  "sdmc:/bouncemasters",
+  "sdmc:/switch/openbonk_nx",
+  "sdmc:/switch/openbonk",
+  "sdmc:/switch/OpenBonk",
+  "sdmc:/openbonk_nx",
+  "sdmc:/openbonk",
   "sdmc:/switch",
   ".",
 };
