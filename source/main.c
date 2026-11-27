@@ -18,6 +18,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <malloc.h>
 #include <string.h>
 #include <switch.h>
 #include <unistd.h>
@@ -365,6 +366,49 @@ static void nx_applet_hook(AppletHookType hook, void *param) {
   }
 }
 
+
+/* Stack-region overcommit arena setup (uses oc_arena_init in libc_shim.c). */
+int oc_arena_init(void *window, size_t window_bytes, void *pool, size_t pool_bytes);
+
+static void oc_setup(void) {
+  static VirtmemReservation *oc_res = NULL;
+  void *win = NULL;
+  size_t win_bytes = (size_t)3072 * 1024 * 1024;
+  while (win_bytes >= (size_t)1536 * 1024 * 1024) {
+    virtmemLock();
+    win = virtmemFindStackArea(win_bytes, MMAP_ARENA_ALIGN);
+    if (win) oc_res = virtmemAddReservation(win, win_bytes);
+    virtmemUnlock();
+    if (win && oc_res) break;
+    win = NULL;
+    win_bytes -= (size_t)512 * 1024 * 1024;
+  }
+  if (!win || !oc_res) {
+    debugPrintf("[oc] virtmemFindStackArea failed -- running without OC\n");
+    return;
+  }
+
+  void *pool = NULL;
+  size_t pool_bytes = (size_t)512 * 1024 * 1024;
+  while (pool_bytes >= (size_t)256 * 1024 * 1024) {
+    pool = memalign(0x1000, pool_bytes);
+    if (pool) break;
+    pool_bytes -= (size_t)128 * 1024 * 1024;
+  }
+  if (!pool) {
+    debugPrintf("[oc] commit-pool alloc failed -- running without OC\n");
+    return;
+  }
+
+  if (oc_arena_init(win, win_bytes, pool, pool_bytes)) {
+    debugPrintf("[oc] armed: %u MB virtual window @ %p, %u MB commit-pool\n",
+                (unsigned)(win_bytes >> 20), win, (unsigned)(pool_bytes >> 20));
+  } else {
+    free(pool);
+    debugPrintf("[oc] oc_arena_init failed\n");
+  }
+}
+
 /* --------------------------------------------------------------------------
  * main
  * ------------------------------------------------------------------------ */
@@ -387,12 +431,13 @@ int main(int argc, char *argv[]) {
   check_syscalls();
   debugPrintf("[boot] syscalls ok\n");
   check_memory();
+  oc_setup();
 
   /* FastLoad clocks for the load path. Module loading, relocation and the first
    * scene are all CPU-bound and single-threaded; this is the difference between
    * a boot that feels broken and one that feels slow. Turned off before the
    * frame loop so it does not cost battery for the whole session. */
-  cpu_boost(0);
+  cpu_boost(1);
   debugPrintf("[boot] CPU boost ON for the load path\n");
 
   /* Verify the staged tree BEFORE loading anything. A missing catalog.bin is a
@@ -543,8 +588,8 @@ int main(int argc, char *argv[]) {
    * page-aligned requests of this size class is libdrm_nouveau. */
   bm_gpua_enable();
 
-  /* Keep CPU boost ON so asset decompression & texture upload don't take minutes */
-  debugPrintf("[boot] CPU boost kept ON for scene/asset loading\n");
+  cpu_boost(0);
+  debugPrintf("[boot] CPU boost OFF (load path complete)\n");
 
   diag_thread_register(NULL, 1);          /* this is the engine main thread */
   diag_set_name(NULL, "openbonk-main");
