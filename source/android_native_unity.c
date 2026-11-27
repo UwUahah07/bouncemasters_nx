@@ -302,7 +302,9 @@ void android_native_input_init(void){
     .fclose_fn = fclose_fake,
   };
   cfg.data_dir = bm_game_root();   /* runtime root; see bm_root.c */
-#if BM_ENABLE_POINTER_INPUT
+  if (screen_width  > 0) cfg.screen_w = screen_width;
+  if (screen_height > 0) cfg.screen_h = screen_height;
+  #if BM_ENABLE_POINTER_INPUT
   nxp_init(&cfg);   /* also starts the six-axis (gyro) sensors */
 #else
   (void)cfg;
