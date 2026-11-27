@@ -1306,11 +1306,11 @@ static void mmap_arena_init_locked(void) {
     usable = g_mmap_arena_size;
   } else {
     // fallback (small heap / applet): memalign a modest arena (< 2GB newlib limit)
-    const size_t want = (size_t)768 * 1024 * 1024 + MMAP_BIG_ALIGN;
+    const size_t want = (size_t)512 * 1024 * 1024 + MMAP_BIG_ALIGN;
     uint8_t *raw = memalign(MMAP_PAGE, want);
     if (!raw) fatal_error("mmap arena alloc (%u MB) failed", (unsigned)(want >> 20));
     base   = (uint8_t *)(((uintptr_t)raw + (MMAP_BIG_ALIGN - 1)) & ~(MMAP_BIG_ALIGN - 1));
-    usable = (size_t)1280 * 1024 * 1024;
+    usable = (size_t)512 * 1024 * 1024;
   }
   size_t pages  = usable / MMAP_PAGE;
   uint8_t *used = (uint8_t *)calloc(pages, 1);
