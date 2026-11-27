@@ -136,12 +136,12 @@ void bm_time_tick(void);
 #define BMM_G3_Input_get_touchSupported                { 0xa9bf4ffeu, 0xf00048f3u, 0xf945be60u }
 #define BMM_RVA_Input_get_touchCount                   0x35d962cu
 #define BMM_G3_Input_get_touchCount                    { 0xa9bf4ffeu, 0xf00048f3u, 0xf945ba60u }
-#define BMM_RVA_Input_GetMouseButton                   0x0u
-#define BMM_G3_Input_GetMouseButton                    { 0xf81e0ffeu, 0xa9014ff4u, 0xb0004714u }
-#define BMM_RVA_Input_GetMouseButtonDown               0x0u
-#define BMM_G3_Input_GetMouseButtonDown                { 0xf81e0ffeu, 0xa9014ff4u, 0xb0004714u }
-#define BMM_RVA_Input_GetMouseButtonUp                 0x0u
-#define BMM_G3_Input_GetMouseButtonUp                  { 0xf81e0ffeu, 0xa9014ff4u, 0xb0004714u }
+#define BMM_RVA_Input_GetMouseButton                   0x35d8f14u
+#define BMM_G3_Input_GetMouseButton                    { 0xf81e0ffeu, 0xa9014ff4u, 0x90004914u }
+#define BMM_RVA_Input_GetMouseButtonDown               0x35d8f50u
+#define BMM_G3_Input_GetMouseButtonDown                { 0xf81e0ffeu, 0xa9014ff4u, 0x90004914u }
+#define BMM_RVA_Input_GetMouseButtonUp                 0x35d8f8cu
+#define BMM_G3_Input_GetMouseButtonUp                  { 0xf81e0ffeu, 0xa9014ff4u, 0x90004914u }
 #define BMM_RVA_Input_GetTouch_Injected                0x35d8ff0u
 #define BMM_G3_Input_GetTouch_Injected                 { 0xd101c3ffu, 0xa90557feu, 0xa9064ff4u }
 #define BMM_RVA_Input_get_anyKey                       0x35d9284u
