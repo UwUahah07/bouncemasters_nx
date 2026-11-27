@@ -1,4 +1,3 @@
-```c
 /* ---------------------------------------------------------------------------
  * bm_offsets.h -- addresses inside the game's own libunity.so.
  *
@@ -577,4 +576,3 @@
 #define GAME_RVA_ProcessTouchEvent          0x00a36e88u  /* 796 b */
 
 #endif /* BM_OFFSETS_H */
-```

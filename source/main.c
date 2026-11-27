@@ -1,4 +1,3 @@
-```c
 /* ---------------------------------------------------------------------------
  * main.c -- entry point, heap layout, module loading, boot sequence.
  *
@@ -566,4 +565,3 @@ int main(int argc, char *argv[]) {
   __libnx_exit(0);
   return 0;
 }
-```
