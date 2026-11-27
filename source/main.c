@@ -522,9 +522,9 @@ int main(int argc, char *argv[]) {
    * Each verifies three guard words and skips itself on a mismatch, so a stale
    * bm_managed.h costs the feature rather than corrupting an unrelated method. */
 #if !OB_BRINGUP
-  // bm_time_install(&il2cpp_mod);
-  // bm_input_install(&il2cpp_mod);
-  // bm_screen_install(&il2cpp_mod);
+   bm_time_install(&il2cpp_mod);
+   bm_input_install(&il2cpp_mod);
+   bm_screen_install(&il2cpp_mod);
   // bm_prefs_install(&il2cpp_mod);
   /* Bouncemasters-only SDK/loading hooks (absent in OpenBonk):
    *   bm_eos_managed_install(&il2cpp_mod);
