@@ -153,18 +153,25 @@ static uint64_t now_ns(void) {
  * ------------------------------------------------------------------------ */
 int bm_vsync_init(void) {
   if (g_ready) return 0;
-#if OB_BRINGUP
-  /* The vsync block RVAs belong to Bouncemasters' libunity and are not
-   * guard-checked below: writing them here would fault or corrupt OpenBonk's. */
-  { static int told; if (!told) { told = 1;
-      debugPrintf("[vsync] OB_BRINGUP: vsync block not resolved for this build yet\n"); } }
-  return -1;
-#endif
 
   uintptr_t base = (uintptr_t)unity_mod.load_virtbase;
   if (!base) {
     debugPrintf("[vsync] libunity not mapped yet -- init deferred\n");
     return -1;
+  }
+
+  /* OPENBONK: the block addresses below are not guard-checked individually, so
+   * check the one instruction they were all read from -- WaitVSync's loop head
+   * (ldr x21,[x22,#0xa58]) -- and refuse to write anything on a mismatch. */
+  {
+    uint32_t live = *(volatile uint32_t *)(base + GAME_RVA_WaitVSync_loop);
+    if (live != GUARD_WaitVSync_loop) {
+      debugPrintf("[vsync] WaitVSync loop guard mismatch at +0x%x (expected 0x%08x, "
+                  "found 0x%08x) -- vsync pump NOT started\n",
+                  (unsigned)GAME_RVA_WaitVSync_loop, (unsigned)GUARD_WaitVSync_loop,
+                  (unsigned)live);
+      return -1;
+    }
   }
 
   g_monitor = (pthread_mutex_t **)(base + GAME_RVA_VSYNC_MONITOR);

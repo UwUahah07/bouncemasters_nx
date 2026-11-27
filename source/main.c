@@ -429,14 +429,9 @@ int main(int argc, char *argv[]) {
    *
    * Set from load_virtbase, not load_base: the offsets in the bridge are
    * virtual addresses within the mapped module. */
-#if OB_BRINGUP
-  /* GC bridge offsets are Bouncemasters-specific; leave it inert (base 0). */
-  g_il2cpp_base = 0;
-  g_il2cpp_size = 0;
-#else
+  /* OpenBonk: GC bridge offsets re-derived (libc_shim.c), arm it. */
   g_il2cpp_base = (uintptr_t)il2cpp_mod.load_virtbase;
   g_il2cpp_size = il2cpp_mod.load_size;
-#endif
   debugPrintf("[gc] il2cpp base=%p size=%u MB (GC stop-the-world bridge armed)\n",
               il2cpp_mod.load_virtbase, (unsigned)(il2cpp_mod.load_size >> 20));
 

@@ -2169,10 +2169,10 @@ size_t    g_il2cpp_size = 0;   /* mapped size of libil2cpp; 0 = unknown (guard i
  * p_vaddr = p_offset + 0x4000 for .text and + 0xc000 for the last RW segment.
  * A scan that walks file offsets while comparing virtual addresses is off by
  * one segment delta and matches nothing. */
-#define GC_START_ACK_OFF   0x4b87d60u  /* GC_retry_signals, restart-ack gate */
-#define GC_SUSPEND_SIG_OFF 0x4b87d64u  /* GC_sig_suspend      (int)   -> 30  */
-#define GC_RESTART_SIG_OFF 0x4b87d68u  /* GC_sig_thr_restart  (int)   -> 24  */
-#define GC_ACK_SEM_OFF     0x4daed90u  /* GC_suspend_ack_sem  (void*)        */
+#define GC_START_ACK_OFF   0x3eeeb38u  /* GC_retry_signals, restart-ack gate */
+#define GC_SUSPEND_SIG_OFF 0x3eeeb3cu  /* GC_sig_suspend      (int)   -> 30  */
+#define GC_RESTART_SIG_OFF 0x3eeeb40u  /* GC_sig_thr_restart  (int)   -> 24  */
+#define GC_ACK_SEM_OFF     0x4110b78u  /* GC_suspend_ack_sem  (void*)        */
 
 /* Largest offset this bridge dereferences; used for the bounds guard below.
  * 0x4daed98 against a 0x4db1e40 mapping -- inside, with ~28 KB to spare. */
@@ -2190,14 +2190,17 @@ size_t    g_il2cpp_size = 0;   /* mapped size of libil2cpp; 0 = unknown (guard i
  * .text, so these words are identical in the file and in memory. */
 typedef struct { uint32_t off; uint32_t word; const char *what; } GcGuard;
 static const GcGuard gc_guards[] = {
-  { 0x1f0aa64, 0xb00163f8, "GC_suspend_all adrp x24,#0x4b87000" },
-  { 0x1f0aaa0, 0xb94d6701, "GC_suspend_all ldr w1,[x24,#0xd64]" },
-  { 0x1f0aca4, 0xb00163f7, "GC_restart_all adrp x23,#0x4b87000" },
-  { 0x1f0ace4, 0xb94d62e8, "GC_restart_all ldr w8,[x23,#0xd60]" },
-  { 0x1f0ad00, 0xb94d6b01, "GC_restart_all ldr w1,[x24,#0xd68]" },
-  { 0x1f0adcc, 0x6b09011f, "GC_stop_init   cmp w8,w9"           },
-  { 0x1f0add4, 0x90017520, "GC_stop_init   adrp x0,#0x4dae000"  },
-  { 0x1f0add8, 0x91364000, "GC_stop_init   add x0,x0,#0xd90"    },
+  /* OPENBONK (Unity 2023.2.22f1) -- derived by decoding libil2cpp's bdwgc
+   * pthread_stop_world block (il2cpp+0x1a03b48..0x1a04208: 2x pthread_kill,
+   * 2x sem_post, sigsuspend, sem_timedwait, sem_wait, sem_init). */
+  { 0x1a03ddc, 0xf0012758, "GC_suspend_all adrp x24,#0x3eee000" },
+  { 0x1a03e18, 0xb94b3f01, "GC_suspend_all ldr w1,[x24,#0xb3c]" },
+  { 0x1a04024, 0xd0012757, "GC_restart_all adrp x23,#0x3eee000" },
+  { 0x1a04028, 0xd0012758, "GC_restart_all adrp x24,#0x3eee000" },
+  { 0x1a04064, 0xb94b3ae8, "GC_restart_all ldr w8,[x23,#0xb38]" },
+  { 0x1a04080, 0xb94b4301, "GC_restart_all ldr w1,[x24,#0xb40]" },
+  { 0x1a04154, 0x90013860, "GC_stop_init   adrp x0,#0x4110000"  },
+  { 0x1a04158, 0x912de000, "GC_stop_init   add x0,x0,#0xb78"    },
 };
 
 int pthread_kill_gc(pthread_t t, int sig) {

@@ -68,11 +68,11 @@
  *   0x00a44e3c  b     #0xa44e24              ; back to the ldr
  *   0x00a44e40  ...   mutex_unlock, return x21
  */
-#define GAME_RVA_WaitVSync          0x00a44e00u   /* function entry             */
+#define GAME_RVA_WaitVSync          0x0090d508u   /* function entry (OPENBONK)  */
 #define GUARD_WaitVSync             0xf81d0ffeu   /* str x30, [sp, #-0x30]!     */
 
-#define GAME_RVA_WaitVSync_loop     0x00a44e24u   /* the ldr the loop re-enters */
-#define GUARD_WaitVSync_loop        0xf9408ed5u   /* ldr x21, [x22, #0x118]     */
+#define GAME_RVA_WaitVSync_loop     0x0090d52cu   /* the ldr the loop re-enters */
+#define GUARD_WaitVSync_loop        0xf9452ed5u   /* ldr x21, [x22, #0xa58]     */
 
 /* s_VsyncMonitor: pthread_mutex + pthread_cond, cond at +0x28. */
 /* SetFrameTimeNanos(long ns) -- the engine's OWN frame-clock entry point.
@@ -91,15 +91,15 @@
  * expects. It also confirms the field semantics inferred in sec.16 were right --
  * Prev really is the previous Last, and the counter really is bumped here.
  */
-#define GAME_RVA_SetFrameTimeNanos  0x00a44e60u
+#define GAME_RVA_SetFrameTimeNanos  0x0090d568u
 #define GUARD_SetFrameTimeNanos     0xf81e0ffeu   /* str x30, [sp, #-0x20]! */
 
-#define GAME_RVA_VSYNC_MONITOR      0x01a330c0u   /* .bss, 88 bytes             */
-#define GAME_RVA_VSYNC_COND         0x01a330e8u   /* MONITOR + 0x28             */
+#define GAME_RVA_VSYNC_MONITOR      0x017c6a00u   /* .bss, 88 bytes             */
+#define GAME_RVA_VSYNC_COND         0x017c6a28u   /* MONITOR + 0x28             */
 
 /* s_FrameCounter, the value WaitVSync spins on. Symbol-confirmed at offset +0
  * of an 8-byte OBJECT in .bss -- exactly what a uint64 counter should be. */
-#define GAME_RVA_VSYNC_COUNTER      0x01a33118u   /* .bss, uint64               */
+#define GAME_RVA_VSYNC_COUNTER      0x017c6a58u   /* .bss, uint64               */
 
 /* ---------------------------------------------------------------------------
  * THE VSYNC STATE BLOCK -- all four fields symbol-named
@@ -129,9 +129,9 @@
  * OUT -- that is expected for an anonymous constant and not a problem. It is
  * recorded here for reference only; nothing needs to read it at runtime.
  * ------------------------------------------------------------------------ */
-#define GAME_RVA_LAST_FRAME_TIME    0x01a33120u   /* .bss, uint64, nanoseconds  */
-#define GAME_RVA_PREV_FRAME_TIME    0x01a33128u   /* .bss, uint64, nanoseconds  */
-#define GAME_RVA_NANO_TIME_OFFSET   0x01a33130u   /* .bss, double, seconds      */
+#define GAME_RVA_LAST_FRAME_TIME    0x017c6a60u   /* .bss, uint64, nanoseconds  */
+#define GAME_RVA_PREV_FRAME_TIME    0x017c6a68u   /* .bss, uint64, nanoseconds  */
+#define GAME_RVA_NANO_TIME_OFFSET   0x017c6a70u   /* .bss, double, seconds      */
 
 /* AndroidVSync::s_LastVsyncCounter -- the target frame the engine last asked
  * for. WaitForLastPresentationAndGetTimestamp() computes the next target as
