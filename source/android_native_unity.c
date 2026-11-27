@@ -41,7 +41,7 @@ typedef struct ALooper       ALooper;
 /* ==========================================================================
  * dock-aware screen state (also read by unity_jni.c's Display getters)
  * ========================================================================== */
-static u32 g_w = 540, g_h = 940;   /* fbstub45 PORTRAIT (stable) */
+static u32 g_w = 720, g_h = 1280;   /* fbstub45 PORTRAIT (stable) */
 extern int screen_width, screen_height;   /* the render resolution main.c resolved (config/auto) */
 
 void android_native_update_mode(void){
