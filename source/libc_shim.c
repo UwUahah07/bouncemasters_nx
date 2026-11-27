@@ -474,7 +474,7 @@ void watch_dump(const char *tag, int fd, long a, long b, const void *buf, long g
  * each big read-only fd through a 1MB window filled by one large read, and
  * virtualize the logical file position -- turning ~250k tiny SD reads per MB into
  * a single one. Keyed by fd; the real fd position is used only as our scratch. */
-#define RA_SLOTS 8
+#define RA_SLOTS 16
 #define RA_WIN   (1u << 20)     /* 1 MB read-ahead window */
 static struct RaCache {
   int  fd;           /* -1 == free */
@@ -730,7 +730,7 @@ int open_fake(const char *path, int flags, ...) {
       if (TRACE_IO) debugPrintf("[io] open(%s,0x%x) -> %d size=%lld\n", path, flags, fd, (long long)_st.st_size);
       /* Big read-only asset files (data.unity3d ~424MB, sharedassets*.resource)
        * get a read-ahead cache so Unity's tiny per-field reads hit RAM, not SD. */
-      if (!writing && _st.st_size >= (4 << 20))
+      if (!writing && _st.st_size >= (512 << 10))
         ra_attach(fd, (long)_st.st_size);
     } else {
       if (TRACE_IO) debugPrintf("[io] open(%s,0x%x) -> %d size=?\n", path, flags, fd);
