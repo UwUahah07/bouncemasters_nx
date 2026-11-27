@@ -1,4 +1,3 @@
-```c
 /* ---------------------------------------------------------------------------
  * bm_managed.h -- RVAs of the UnityEngine managed methods this port hooks.
  *
@@ -414,4 +413,3 @@ void bm_prefs_flush_now(void);  /* shutdown/suspend: flush unconditionally    */
 int bm_steptrace_install(so_module *il2cpp);
 
 #endif /* BM_MANAGED_H */
-```
