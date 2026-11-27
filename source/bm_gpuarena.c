@@ -58,7 +58,7 @@ extern void  __real_free(void *p);
  * its buffers are ~3.5 MB rather than PvZ's ~8 MB, and it needs far less than
  * PvZ's 1152 MB -- but the arena costs only address space it would otherwise
  * have fragmented, so start generous. */
-#define GPUA_BYTES ((size_t)512 * 1024 * 1024)
+#define GPUA_BYTES ((size_t)640 * 1024 * 1024)
 #define GPUA_FLOOR ((size_t)96 * 1024 * 1024)
 /* Below this, newlib is fine: small allocations do not cause the large-run
  * fragmentation this arena exists to prevent. */
