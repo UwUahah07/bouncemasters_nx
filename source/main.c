@@ -393,7 +393,7 @@ static void oc_setup(void) {
   }
 
   void *pool = NULL;
-  size_t pool_bytes = (size_t)384 * 1024 * 1024;
+  size_t pool_bytes = (size_t)768 * 1024 * 1024;
   while (pool_bytes >= (size_t)256 * 1024 * 1024) {
     pool = memalign(0x1000, pool_bytes);
     if (pool) break;
