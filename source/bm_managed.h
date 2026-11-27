@@ -81,14 +81,14 @@ void bm_time_tick(void);
  * first pass covered only the float getters -- see PORTING.md sec 27. */
 #define BMM_RVA_Time_get_timeAsDouble                 0x0u
 #define BMM_G3_Time_get_timeAsDouble                  { 0xa9bf4ffeu, 0x90004993u, 0xf943c660u }
-#define BMM_RVA_Time_get_timeAsRational               0x0u
-#define BMM_G3_Time_get_timeAsRational                { 0xd10083ffu, 0xa9014ffeu, 0xd0004973u }
+#define BMM_RVA_Time_get_timeAsRational               0x359cebcu
+#define BMM_G3_Time_get_timeAsRational                { 0xd10083ffu, 0xa9014ffeu, 0xf0004ad3u }
 #define BMM_RVA_Time_set_timeScale                    0x359d054u
 #define BMM_G3_Time_set_timeScale                     { 0xfc1e0fe8u, 0xa9014ffeu, 0xd0004ad3u }
 #define BMM_RVA_Time_get_realtimeSinceStartupAsDouble 0x0u
 #define BMM_G3_Time_get_realtimeSinceStartupAsDouble  { 0xa9bf4ffeu, 0x90004993u, 0xf943f260u }
-#define BMM_RVA_Time_get_timeAsRational_Injected      0x359cebcu
-#define BMM_G3_Time_get_timeAsRational_Injected       { 0xd10083ffu, 0xa9014ffeu, 0xf0004ad3u }
+#define BMM_RVA_Time_get_timeAsRational_Injected      0x359cf00u
+#define BMM_G3_Time_get_timeAsRational_Injected       { 0xf81e0ffeu, 0xa9014ff4u, 0xf0004ad4u }
 
 /* ---- UnityEngine.Input: the members the game ACTUALLY calls ----
  *
@@ -122,16 +122,16 @@ void bm_time_tick(void);
  *                        passes an indirect-result pointer in x8 (`mov x19, x8`
  *                        in the prologue) and the index in w0.
  * Both are what a C function returning the same struct types produces. */
-#define BMM_RVA_Input_get_mousePosition  0x0u
-#define BMM_G3_Input_get_mousePosition   { 0xd10083ffu, 0xa9014ffeu, 0x90004713u }
+#define BMM_RVA_Input_get_mousePosition  0x35d92acu
+#define BMM_G3_Input_get_mousePosition   { 0xd10083ffu, 0xa9014ffeu, 0xf00048f3u }
 #define BMM_RVA_Input_GetTouch           0x0u
 #define BMM_G3_Input_GetTouch            { 0xd101c3ffu, 0xa90557feu, 0xa9064ff4u }
 
 /* ---- UnityEngine.Input ---- */
-#define BMM_RVA_Input_get_mousePosition_Injected       0x35d92acu
-#define BMM_G3_Input_get_mousePosition_Injected        { 0xd10083ffu, 0xa9014ffeu, 0xf00048f3u }
-#define BMM_RVA_Input_get_mousePresent                 0x35d95c8u
-#define BMM_G3_Input_get_mousePresent                  { 0xf81e0ffeu, 0xa9014ff4u, 0xf00048f4u }
+#define BMM_RVA_Input_get_mousePosition_Injected       0x35d92f8u
+#define BMM_G3_Input_get_mousePosition_Injected        { 0xf81e0ffeu, 0xa9014ff4u, 0xf00048f4u }
+#define BMM_RVA_Input_get_mousePresent                 0x35d9604u
+#define BMM_G3_Input_get_mousePresent                  { 0xa9bf4ffeu, 0xf00048f3u, 0xf945b660u }
 #define BMM_RVA_Input_get_touchSupported               0x35d9654u
 #define BMM_G3_Input_get_touchSupported                { 0xa9bf4ffeu, 0xf00048f3u, 0xf945be60u }
 #define BMM_RVA_Input_get_touchCount                   0x35d962cu
@@ -144,8 +144,8 @@ void bm_time_tick(void);
 #define BMM_G3_Input_GetMouseButtonUp                  { 0xf81e0ffeu, 0xa9014ff4u, 0xb0004714u }
 #define BMM_RVA_Input_GetTouch_Injected                0x35d8ff0u
 #define BMM_G3_Input_GetTouch_Injected                 { 0xd101c3ffu, 0xa90557feu, 0xa9064ff4u }
-#define BMM_RVA_Input_get_anyKey                       0x35d9248u
-#define BMM_G3_Input_get_anyKey                        { 0xf81e0ffeu, 0xa9014ff4u, 0xf00048f4u }
+#define BMM_RVA_Input_get_anyKey                       0x35d9284u
+#define BMM_G3_Input_get_anyKey                        { 0xa9bf4ffeu, 0xf00048f3u, 0xf945aa60u }
 #define BMM_RVA_Input_get_anyKeyDown                   0x0u
 #define BMM_G3_Input_get_anyKeyDown                    { 0xa9bf4ffeu, 0xb0004713u, 0xf9432a60u }
 
@@ -156,9 +156,9 @@ void bm_time_tick(void);
 #define BMM_G3_Screen_get_height                        { 0xa9bf4ffeu, 0x90004cb3u, 0xf9451260u }
 #define BMM_RVA_Screen_get_dpi                          0x35628f4u
 #define BMM_G3_Screen_get_dpi                           { 0xa9bf4ffeu, 0x90004cb3u, 0xf9451660u }
-#define BMM_RVA_Screen_get_currentResolution_Injected   0x356291cu
-#define BMM_G3_Screen_get_currentResolution_Injected    { 0xd10083ffu, 0xa9014ffeu, 0x90004cb3u }
-#define BMM_RVA_Screen_get_safeArea_Injected            0x35629ecu
+#define BMM_RVA_Screen_get_currentResolution_Injected   0x3562960u
+#define BMM_G3_Screen_get_currentResolution_Injected    { 0xf81e0ffeu, 0xa9014ff4u, 0x90004cb4u }
+#define BMM_RVA_Screen_get_safeArea_Injected            0x3562a70u
 #define BMM_G3_Screen_get_safeArea_Injected             { 0xf81e0ffeu, 0xa9014ff4u, 0x90004cb4u }
 
 /* ---- UnityEngine.Display ---- */
