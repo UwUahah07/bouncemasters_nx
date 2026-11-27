@@ -648,9 +648,19 @@ void nxp_update(void) {
   const int mouse_tap = do_mouse();
   do_gyro();                               /* no-op if off, or if a mouse is in */
 
+  {
+    /* Right Stick always moves pointer/camera; Left Stick moves cursor only when visible */
+    HidAnalogStickState rs = padGetStickPos(&s_pad, 1);
+    if (abs(rs.x) > 2500 || abs(rs.y) > 2500) {
+      s_cx += (rs.x / 32767.0f) * s_stick_speed;
+      s_cy -= (rs.y / 32767.0f) * s_stick_speed;
+      clamp_cursor();
+    }
+  }
+
   if (s_visible > 0) {
     HidAnalogStickState ls = padGetStickPos(&s_pad, 0);
-    if (ls.x || ls.y) {
+    if (abs(ls.x) > 2500 || abs(ls.y) > 2500) {
       s_cx += (ls.x / 32767.0f) * s_stick_speed;
       s_cy -= (ls.y / 32767.0f) * s_stick_speed;   /* stick +y is up */
       clamp_cursor();
