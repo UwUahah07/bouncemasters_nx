@@ -324,6 +324,118 @@ static int32_t bmi_GetKeyUpInt(int32_t kc) {
   return !v && prev;
 }
 
+
+/* ---- OpenBonk MyInputManager hooks (Left/Right sticks + controller buttons) ---- */
+static PadState g_ob_pad;
+static int g_ob_pad_init = 0;
+static void ob_pad_poll(u64 *held_out, HidAnalogStickState *ls_out, HidAnalogStickState *rs_out) {
+  if (!g_ob_pad_init) { padInitializeDefault(&g_ob_pad); g_ob_pad_init = 1; }
+  padUpdate(&g_ob_pad);
+  if (held_out) *held_out = padGetButtons(&g_ob_pad);
+  if (ls_out)   *ls_out   = padGetStickPos(&g_ob_pad, 0);
+  if (rs_out)   *rs_out   = padGetStickPos(&g_ob_pad, 1);
+}
+
+static int il2cpp_str_eq(void *s, const char *ascii) {
+  if (!s || !ascii) return 0;
+  int32_t len = *(const int32_t *)((const uint8_t *)s + 0x10);
+  const uint16_t *chars = (const uint16_t *)((const uint8_t *)s + 0x14);
+  for (int32_t i = 0; i < len; i++) {
+    if (!ascii[i] || chars[i] != (uint16_t)(unsigned char)ascii[i]) return 0;
+  }
+  return ascii[len] == '\0';
+}
+
+static float ob_stick_norm(int32_t v) {
+  const int32_t dz = 3000;
+  if (v > -dz && v < dz) return 0.0f;
+  float f = (float)v / 32767.0f;
+  if (f >  1.0f) f =  1.0f;
+  if (f < -1.0f) f = -1.0f;
+  return f;
+}
+
+static float bmi_MyInput_GetAxis(void *action_str) {
+  u64 h = 0; HidAnalogStickState ls = {0}, rs = {0};
+  ob_pad_poll(&h, &ls, &rs);
+  if (il2cpp_str_eq(action_str, "Move Horizontal")) {
+    float v = ob_stick_norm(ls.x);
+    if (h & HidNpadButton_Right) v =  1.0f;
+    if (h & HidNpadButton_Left)  v = -1.0f;
+    return v;
+  }
+  if (il2cpp_str_eq(action_str, "Move Vertical")) {
+    float v = ob_stick_norm(ls.y);
+    if (h & HidNpadButton_Up)   v =  1.0f;
+    if (h & HidNpadButton_Down) v = -1.0f;
+    return v;
+  }
+  if (il2cpp_str_eq(action_str, "Look Horizontal") ||
+      il2cpp_str_eq(action_str, "ControllerLookHorizontal")) {
+    return ob_stick_norm(rs.x);
+  }
+  if (il2cpp_str_eq(action_str, "Look Vertical") ||
+      il2cpp_str_eq(action_str, "ControllerLookVertical")) {
+    return ob_stick_norm(rs.y);
+  }
+  return 0.0f;
+}
+
+static int ob_action_held(void *action_str, int *slot_out) {
+  u64 h = 0;
+  ob_pad_poll(&h, NULL, NULL);
+  if (il2cpp_str_eq(action_str, "Jump")) {
+    if (slot_out) *slot_out = 0;
+    return (h & HidNpadButton_B) != 0;
+  }
+  if (il2cpp_str_eq(action_str, "Interact")) {
+    if (slot_out) *slot_out = 1;
+    return (h & HidNpadButton_ZR) != 0;
+  }
+  if (il2cpp_str_eq(action_str, "Pause")) {
+    if (slot_out) *slot_out = 2;
+    return (h & HidNpadButton_Y) != 0;
+  }
+  if (il2cpp_str_eq(action_str, "Confirm") || il2cpp_str_eq(action_str, "Submit")) {
+    if (slot_out) *slot_out = 3;
+    return (h & HidNpadButton_A) != 0;
+  }
+  if (il2cpp_str_eq(action_str, "Cancel") || il2cpp_str_eq(action_str, "Back")) {
+    if (slot_out) *slot_out = 4;
+    return (h & HidNpadButton_B) != 0;
+  }
+  if (il2cpp_str_eq(action_str, "Ability") || il2cpp_str_eq(action_str, "Dash") ||
+      il2cpp_str_eq(action_str, "Slide")   || il2cpp_str_eq(action_str, "Crouch")) {
+    if (slot_out) *slot_out = 5;
+    return (h & (HidNpadButton_X | HidNpadButton_ZL)) != 0;
+  }
+  if (slot_out) *slot_out = -1;
+  return 0;
+}
+
+static uint8_t g_ob_btn_down_prev[8];
+static uint8_t g_ob_btn_up_prev[8];
+
+static int32_t bmi_MyInput_GetButton(void *action_str) {
+  return ob_action_held(action_str, NULL);
+}
+static int32_t bmi_MyInput_GetButtonDown(void *action_str) {
+  int slot = -1;
+  int v = ob_action_held(action_str, &slot);
+  if (slot < 0) return 0;
+  int prev = g_ob_btn_down_prev[slot];
+  g_ob_btn_down_prev[slot] = (uint8_t)v;
+  return v && !prev;
+}
+static int32_t bmi_MyInput_GetButtonUp(void *action_str) {
+  int slot = -1;
+  int v = ob_action_held(action_str, &slot);
+  if (slot < 0) return 0;
+  int prev = g_ob_btn_up_prev[slot];
+  g_ob_btn_up_prev[slot] = (uint8_t)v;
+  return !v && prev;
+}
+
 /* ---------------------------------------------------------------- install */
 
 int bm_input_install(so_module *il2cpp) {
@@ -375,7 +487,15 @@ int bm_input_install(so_module *il2cpp) {
   n += bm_managed_hook(il2cpp, "Input.GetKeyInt",     BMM_RVA_Input_GetKeyInt,     g_gki, (void *)&bmi_GetKeyInt);
   n += bm_managed_hook(il2cpp, "Input.GetKeyDownInt", BMM_RVA_Input_GetKeyDownInt, g_gkd, (void *)&bmi_GetKeyDownInt);
   n += bm_managed_hook(il2cpp, "Input.GetKeyUpInt",   BMM_RVA_Input_GetKeyUpInt,   g_gku, (void *)&bmi_GetKeyUpInt);
-  debugPrintf("[input] %d/15 Input accessors hooked (touch + mouse emulation)\n", n);
+  static const uint32_t g_mia [3] = BMM_G3_MyInput_GetAxis;
+  static const uint32_t g_mib [3] = BMM_G3_MyInput_GetButton;
+  static const uint32_t g_mibd[3] = BMM_G3_MyInput_GetButtonDown;
+  static const uint32_t g_mibu[3] = BMM_G3_MyInput_GetButtonUp;
+  n += bm_managed_hook(il2cpp, "MyInputManager.GetAxis",       BMM_RVA_MyInput_GetAxis,       g_mia,  (void *)&bmi_MyInput_GetAxis);
+  n += bm_managed_hook(il2cpp, "MyInputManager.GetButton",     BMM_RVA_MyInput_GetButton,     g_mib,  (void *)&bmi_MyInput_GetButton);
+  n += bm_managed_hook(il2cpp, "MyInputManager.GetButtonDown", BMM_RVA_MyInput_GetButtonDown, g_mibd, (void *)&bmi_MyInput_GetButtonDown);
+  n += bm_managed_hook(il2cpp, "MyInputManager.GetButtonUp",   BMM_RVA_MyInput_GetButtonUp,   g_mibu, (void *)&bmi_MyInput_GetButtonUp);
+  debugPrintf("[input] %d/19 Input accessors hooked (touch + mouse emulation)\n", n);
   if (n == 0)
     debugPrintf("[input] NONE installed -- the game will be unplayable. Regenerate\n"
                 "        bm_managed.h from a dump.cs matching THIS libil2cpp.\n");
