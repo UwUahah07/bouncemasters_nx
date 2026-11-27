@@ -1,3 +1,4 @@
+```c
 /* ---------------------------------------------------------------------------
  * bm_offsets.h -- addresses inside the game's own libunity.so.
  *
@@ -248,8 +249,8 @@
  * Both work; this way keeps it in the same guarded-patch table as everything
  * else here, with no icall-table lookup to get right.
  */
-#define GAME_RVA_DVM_GetInternetReachability 0x00a283b4u
-#define GUARD_DVM_GetInternetReachability    0xd10083ffu  /* sub sp, sp, #0x20 */
+#define GAME_RVA_DVM_GetInternetReachability 0x008f7af4u
+#define GUARD_DVM_GetInternetReachability    0xa9be57f6u  /* stp x22, x21, [sp, #-0x20]! */
 
 /* ===========================================================================
  * APK FILESYSTEM HANDLER -- make it decline everything
@@ -280,7 +281,7 @@
  * Note the jar:file:// path shapes still work -- bm_assets.c rewrites them to
  * real SD paths before they ever reach a handler. See bm_assets.h.
  * ========================================================================= */
-#define GAME_RVA_APK_CanHandle    0x00a5d630u   /* 172 b */
+#define GAME_RVA_APK_CanHandle    0x008fd594u   /* OpenBonk 2023.2.22f1 */
 #define GUARD_APK_CanHandle       0xd10143ffu   /* sub sp, sp, #0x50 */
 
 /* ===========================================================================
@@ -363,9 +364,9 @@
  * change all of them. This confines the lie to the single branch that needs it.
  * (Reasoning adopted from hmsniper_nx, which hit this in the same order.)
  */
-#define GAME_RVA_Choreographer_ctx_branch  0x00a44ffcu
-#define GUARD_Choreographer_ctx_branch     0x540001a0u   /* b.eq #0xa45030 */
-#define PATCH_Choreographer_ctx_branch     0x1400000du   /* b    #0xa45030 */
+#define GAME_RVA_Choreographer_ctx_branch  0x0090d6fcu
+#define GUARD_Choreographer_ctx_branch     0x54000160u   /* b.eq #0x90d728 */
+#define PATCH_Choreographer_ctx_branch     0x1400000bu   /* b    #0x90d728 */
 
 /* [2 of 3] Stop ChoreographerNDK's constructor waiting on its looper.
  *
@@ -393,12 +394,12 @@
  * (0xa4b3d4 / 0xa4b3fc). If a Data Abort appears at ChoreographerNDK+0x180,
  * that is this patch, and the follow-up is to stub those two as well.
  */
-#define GAME_RVA_NdkLooper_CreateHandler_call 0x00a4b2d0u
-#define GUARD_NdkLooper_CreateHandler_call    0x94001863u   /* bl #0xa5145c   */
+#define GAME_RVA_NdkLooper_CreateHandler_call 0x009137c8u
+#define GUARD_NdkLooper_CreateHandler_call    0x94001187u   /* bl #0x917de4   */
 #define PATCH_NdkLooper_CreateHandler_call    0xd2800000u   /* mov x0, #0     */
 
 /* [3 of 3] The API level itself. */
-#define GAME_RVA_DeviceApiLevel   0x00a451b4u
+#define GAME_RVA_DeviceApiLevel   0x0090d924u
 #define GUARD_DeviceApiLevel      0xd100c3ffu   /* sub sp, sp, #0x30 */
 #define BM_REPORTED_API_LEVEL     33
 
@@ -433,15 +434,15 @@
  * The udiv guard word here (0x1ac90949) is byte-identical to cloverpit_nx's
  * GUARD_FMOD_BUFCOUNT on a different Unity build -- the same code, unchanged.
  * ========================================================================= */
-#define GAME_RVA_FMOD_PERIOD_LDR   0x018c06c8u
+#define GAME_RVA_FMOD_PERIOD_LDR   0x0166547cu
 #define GUARD_FMOD_PERIOD_LDR      0xb943fa69u   /* ldr w9,[x19,#0x3f8] */
-#define GAME_RVA_FMOD_PERIOD_CBZ   0x018c06ccu
+#define GAME_RVA_FMOD_PERIOD_CBZ   0x01665480u
 #define GUARD_FMOD_PERIOD_CBZ      0x34000129u   /* cbz w9, fail        */
 /* movz w9, #BM_AUDIO_PERIOD_FRAMES  /  str w9,[x19,#0x3f8] */
 #define PATCH_FMOD_PERIOD_MOV      (0x52800000u | ((BM_AUDIO_PERIOD_FRAMES & 0xffffu) << 5) | 9u)
 #define PATCH_FMOD_PERIOD_STR      0xb903fa69u
 
-#define GAME_RVA_FMOD_BUFCOUNT     0x018c0748u
+#define GAME_RVA_FMOD_BUFCOUNT     0x016654fcu
 #define GUARD_FMOD_BUFCOUNT        0x1ac90949u   /* udiv w9, w10, w9 */
 #define PATCH_FMOD_BUFCOUNT        (0x52800000u | ((BM_AUDIO_UPFRONT_BUFFERS & 0xffffu) << 5) | 9u)
 
@@ -529,7 +530,7 @@
  * does not produce a degenerate count. Both zero guards above are left intact
  * and pass (48000 and 64 are non-zero).
  */
-#define GAME_RVA_FMOD_BUFGEOM_BRANCH   0x018c06ecu
+#define GAME_RVA_FMOD_BUFGEOM_BRANCH   0x016654a0u
 #define GUARD_FMOD_BUFGEOM_BRANCH      0x54000089u  /* b.ls #0x18c06fc */
 #define PATCH_FMOD_BUFGEOM_BRANCH      0x14000004u  /* b    #0x18c06fc */
 
@@ -576,3 +577,4 @@
 #define GAME_RVA_ProcessTouchEvent          0x00a36e88u  /* 796 b */
 
 #endif /* BM_OFFSETS_H */
+```
