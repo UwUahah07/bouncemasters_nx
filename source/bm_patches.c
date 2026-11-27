@@ -260,10 +260,13 @@ int bm_apply_patches(void) {
    * branch and writing two instructions into one would run into whatever
    * follows. Bouncemasters has a full offline mode, so this is the answer that
    * both is true here and unblocks the boot path. */
+ #if 0
   patch_words("net/reachability-notreachable",
               GAME_RVA_DVM_GetInternetReachability,
               GUARD_DVM_GetInternetReachability,
               P_RET_ZERO, 2);
+ #endif
+
 
   debugPrintf("[patch] %d applied, %d skipped\n", g_applied, g_skipped);
   if (g_skipped) {
