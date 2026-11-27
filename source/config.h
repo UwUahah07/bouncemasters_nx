@@ -224,7 +224,7 @@ extern int screen_height;
  * asset index in bm_assets.c already logs its misses, which is usually the
  * information TRACE_IO would have been turned on to get.
  * ------------------------------------------------------------------------ */
-#define TRACE_IO   0
+#define TRACE_IO   1
 #define TRACE_MMAP 0
 
 /* ---------------------------------------------------------------------------
