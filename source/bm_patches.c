@@ -266,3 +266,13 @@ int bm_apply_patches(void) {
   }
   return g_applied;
 }
+
+
+/* OPENBONK bring-up: apply ONLY the allocator-granularity patch. Every other
+ * patch in bm_apply_patches() uses Bouncemasters-specific RVAs and some lie
+ * past the end of OpenBonk's libunity mapping, so they stay off until each one
+ * has been re-derived. */
+int bm_apply_granularity_only(void) {
+  g_applied = g_skipped = 0;
+  return apply_granularity();
+}

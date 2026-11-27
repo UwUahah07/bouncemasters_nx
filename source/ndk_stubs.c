@@ -33,6 +33,7 @@ void  AConfiguration_fromAssetManager(void *a, void *b) { (void)a;(void)b; }
 void  AConfiguration_getLanguage(void *a, char *out) { (void)a; if (out) { out[0]='e'; out[1]='n'; } }
 void  AConfiguration_getCountry(void *a, char *out) { (void)a; if (out) { out[0]='U'; out[1]='S'; } }
 void  AConfiguration_delete(void *a) { (void)a; }
+int32_t AConfiguration_getSdkVersion(void *a) { (void)a; return 33; }
 
 /* AAsset (Unity uses the Java AssetManager instead) */
 void *AAssetManager_fromJava(void *a, void *b) { (void)a;(void)b; return NULL; }

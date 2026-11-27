@@ -581,6 +581,7 @@ extern void  AConfiguration_fromAssetManager(void *, void *);
 extern void  AConfiguration_getLanguage(void *, char *);
 extern void  AConfiguration_getCountry(void *, char *);
 extern void  AConfiguration_delete(void *);
+extern int32_t AConfiguration_getSdkVersion(void *);
 extern int   ASensorEventQueue_enableSensor(void *, const void *);
 extern int   ASensorEventQueue_disableSensor(void *, const void *);
 extern int   ASensorEventQueue_setEventRate(void *, const void *, int32_t);
@@ -1079,6 +1080,7 @@ DynLibFunction dynlib_functions[] = {
   { "AConfiguration_getLanguage", (uintptr_t)&AConfiguration_getLanguage },
   { "AConfiguration_getCountry", (uintptr_t)&AConfiguration_getCountry },
   { "AConfiguration_delete", (uintptr_t)&AConfiguration_delete },
+  { "AConfiguration_getSdkVersion", (uintptr_t)&AConfiguration_getSdkVersion },
   { "ASensorEventQueue_enableSensor", (uintptr_t)&ASensorEventQueue_enableSensor },
   { "ASensorEventQueue_disableSensor", (uintptr_t)&ASensorEventQueue_disableSensor },
   { "ASensorEventQueue_setEventRate", (uintptr_t)&ASensorEventQueue_setEventRate },

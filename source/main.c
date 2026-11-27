@@ -91,6 +91,7 @@ void bm_boot_resume(void);
 void bm_boot_focus(int focused);
 void bm_gpua_enable(void);
 int  bm_apply_patches(void);
+int  bm_apply_granularity_only(void);
 int  bm_vsync_init(void);
 
 /* Used by nx_crash_handler.c to name an address in a backtrace. */
@@ -450,7 +451,8 @@ int main(int argc, char *argv[]) {
 #if !OB_BRINGUP
   bm_apply_patches();
 #else
-  debugPrintf("[boot] OB_BRINGUP: bm_apply_patches() skipped\n");
+  debugPrintf("[boot] OB_BRINGUP: bm_apply_patches() skipped; granularity only\n");
+  bm_apply_granularity_only();
 #endif
 
   /* MAIN-THREAD BIONIC TLS -- must precede any engine code. */
