@@ -419,4 +419,15 @@ void bm_prefs_flush_now(void);  /* shutdown/suspend: flush unconditionally    */
 
 int bm_steptrace_install(so_module *il2cpp);
 
+
+/* ---- OpenBonk MyInputManager (static methods) ---- */
+#define BMM_RVA_MyInput_GetAxis       0x1b153e0u
+#define BMM_G3_MyInput_GetAxis        { 0xa9be57feu, 0xa9014ff4u, 0xb0011ed4u }
+#define BMM_RVA_MyInput_GetButton     0x1b16dd0u
+#define BMM_G3_MyInput_GetButton      { 0xa9be57feu, 0xa9014ff4u, 0x90011ed4u }
+#define BMM_RVA_MyInput_GetButtonDown 0x1b13070u
+#define BMM_G3_MyInput_GetButtonDown  { 0xa9be57feu, 0xa9014ff4u, 0xf0011ed4u }
+#define BMM_RVA_MyInput_GetButtonUp   0x1b16e28u
+#define BMM_G3_MyInput_GetButtonUp    { 0xa9be57feu, 0xa9014ff4u, 0x90011ed4u }
+
 #endif /* BM_MANAGED_H */
