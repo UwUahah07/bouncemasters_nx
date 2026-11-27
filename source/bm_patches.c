@@ -223,7 +223,6 @@ int bm_apply_patches(void) {
 #endif
 #endif
 
-#if 0
   /* [4a] Choreographer: force the context branch to the API-level check.
    *
    * Order within the group does not matter -- all three are inert until
@@ -251,7 +250,6 @@ int bm_apply_patches(void) {
               GAME_RVA_DeviceApiLevel,
               GUARD_DeviceApiLevel,
               P_RET_API33, 2);
-#endif
 
   /* [5] internetReachability -> NotReachable.
    *
@@ -260,13 +258,12 @@ int bm_apply_patches(void) {
    * branch and writing two instructions into one would run into whatever
    * follows. Bouncemasters has a full offline mode, so this is the answer that
    * both is true here and unblocks the boot path. */
- #if 0
+#if 0
   patch_words("net/reachability-notreachable",
               GAME_RVA_DVM_GetInternetReachability,
               GUARD_DVM_GetInternetReachability,
               P_RET_ZERO, 2);
- #endif
-
+#endif
 
   debugPrintf("[patch] %d applied, %d skipped\n", g_applied, g_skipped);
   if (g_skipped) {
