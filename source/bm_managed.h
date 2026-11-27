@@ -1,3 +1,4 @@
+```c
 /* ---------------------------------------------------------------------------
  * bm_managed.h -- RVAs of the UnityEngine managed methods this port hooks.
  *
@@ -56,39 +57,39 @@ int bm_screen_install(so_module *il2cpp);
 void bm_time_tick(void);
 
 /* ---- UnityEngine.Time ---- */
-#define BMM_RVA_Time_get_time                         0x42686e4u
-#define BMM_G3_Time_get_time                          { 0xa9bf4ffeu, 0xd0004973u, 0xf943c260u }
-#define BMM_RVA_Time_get_deltaTime                    0x42687b4u
-#define BMM_G3_Time_get_deltaTime                     { 0xa9bf4ffeu, 0xd0004973u, 0xf943ce60u }
-#define BMM_RVA_Time_get_unscaledTime                 0x42687dcu
-#define BMM_G3_Time_get_unscaledTime                  { 0xa9bf4ffeu, 0xd0004973u, 0xf943d260u }
-#define BMM_RVA_Time_get_unscaledDeltaTime            0x4268804u
-#define BMM_G3_Time_get_unscaledDeltaTime             { 0xa9bf4ffeu, 0xd0004973u, 0xf943d660u }
-#define BMM_RVA_Time_get_fixedDeltaTime               0x426882cu
-#define BMM_G3_Time_get_fixedDeltaTime                { 0xa9bf4ffeu, 0xd0004973u, 0xf943da60u }
-#define BMM_RVA_Time_get_smoothDeltaTime              0x4268854u
-#define BMM_G3_Time_get_smoothDeltaTime               { 0xa9bf4ffeu, 0xd0004973u, 0xf943de60u }
-#define BMM_RVA_Time_get_timeScale                    0x426887cu
-#define BMM_G3_Time_get_timeScale                     { 0xa9bf4ffeu, 0xd0004973u, 0xf943e260u }
-#define BMM_RVA_Time_get_frameCount                   0x425a8d4u
-#define BMM_G3_Time_get_frameCount                    { 0xa9bf4ffeu, 0x900049f3u, 0xf943ea60u }
-#define BMM_RVA_Time_get_realtimeSinceStartup         0x42669acu
-#define BMM_G3_Time_get_realtimeSinceStartup          { 0xa9bf4ffeu, 0x90004993u, 0xf943ee60u }
-#define BMM_RVA_Time_get_timeSinceLevelLoad           0x426878cu
-#define BMM_G3_Time_get_timeSinceLevelLoad            { 0xa9bf4ffeu, 0xd0004973u, 0xf943ca60u }
+#define BMM_RVA_Time_get_time                         0x359ce94u
+#define BMM_G3_Time_get_time                          { 0xa9bf4ffeu, 0xf0004ad3u, 0xf9472660u }
+#define BMM_RVA_Time_get_deltaTime                    0x359cf3cu
+#define BMM_G3_Time_get_deltaTime                     { 0xa9bf4ffeu, 0xf0004ad3u, 0xf9472a60u }
+#define BMM_RVA_Time_get_unscaledTime                 0x359cf8cu
+#define BMM_G3_Time_get_unscaledTime                  { 0xa9bf4ffeu, 0xf0004ad3u, 0xf9473260u }
+#define BMM_RVA_Time_get_unscaledDeltaTime            0x359cfb4u
+#define BMM_G3_Time_get_unscaledDeltaTime             { 0xa9bf4ffeu, 0xf0004ad3u, 0xf9473660u }
+#define BMM_RVA_Time_get_fixedDeltaTime               0x359cfdcu
+#define BMM_G3_Time_get_fixedDeltaTime                { 0xa9bf4ffeu, 0xf0004ad3u, 0xf9473a60u }
+#define BMM_RVA_Time_get_smoothDeltaTime              0x359d004u
+#define BMM_G3_Time_get_smoothDeltaTime               { 0xa9bf4ffeu, 0xd0004ad3u, 0xf9473e60u }
+#define BMM_RVA_Time_get_timeScale                    0x359d02cu
+#define BMM_G3_Time_get_timeScale                     { 0xa9bf4ffeu, 0xd0004ad3u, 0xf9474260u }
+#define BMM_RVA_Time_get_frameCount                   0x358fab4u
+#define BMM_G3_Time_get_frameCount                    { 0xa9bf4ffeu, 0x90004b53u, 0xf9474a60u }
+#define BMM_RVA_Time_get_realtimeSinceStartup         0x359af80u
+#define BMM_G3_Time_get_realtimeSinceStartup          { 0x6dbd23e9u, 0xf9000bfeu, 0xa9024ff4u }
+#define BMM_RVA_Time_get_timeSinceLevelLoad           0x359cf64u
+#define BMM_G3_Time_get_timeSinceLevelLoad            { 0xa9bf4ffeu, 0xf0004ad3u, 0xf9472e60u }
 
 /* Time, remaining members. Added after an audit against dump.cs found the
  * first pass covered only the float getters -- see PORTING.md sec 27. */
-#define BMM_RVA_Time_get_timeAsDouble                 0x4266b80u
+#define BMM_RVA_Time_get_timeAsDouble                 0x0u
 #define BMM_G3_Time_get_timeAsDouble                  { 0xa9bf4ffeu, 0x90004993u, 0xf943c660u }
-#define BMM_RVA_Time_get_timeAsRational               0x426870cu
+#define BMM_RVA_Time_get_timeAsRational               0x0u
 #define BMM_G3_Time_get_timeAsRational                { 0xd10083ffu, 0xa9014ffeu, 0xd0004973u }
-#define BMM_RVA_Time_set_timeScale                    0x42688a4u
-#define BMM_G3_Time_set_timeScale                     { 0xfc1e0fe8u, 0xa9014ffeu, 0x1e204008u }
-#define BMM_RVA_Time_get_realtimeSinceStartupAsDouble 0x4266b58u
+#define BMM_RVA_Time_set_timeScale                    0x359d054u
+#define BMM_G3_Time_set_timeScale                     { 0xfc1e0fe8u, 0xa9014ffeu, 0xd0004ad3u }
+#define BMM_RVA_Time_get_realtimeSinceStartupAsDouble 0x0u
 #define BMM_G3_Time_get_realtimeSinceStartupAsDouble  { 0xa9bf4ffeu, 0x90004993u, 0xf943f260u }
-#define BMM_RVA_Time_get_timeAsRational_Injected      0x4268750u
-#define BMM_G3_Time_get_timeAsRational_Injected       { 0xf81e0ffeu, 0xa9014ff4u, 0xd0004974u }
+#define BMM_RVA_Time_get_timeAsRational_Injected      0x359cebcu
+#define BMM_G3_Time_get_timeAsRational_Injected       { 0xd10083ffu, 0xa9014ffeu, 0xf0004ad3u }
 
 /* ---- UnityEngine.Input: the members the game ACTUALLY calls ----
  *
@@ -122,53 +123,53 @@ void bm_time_tick(void);
  *                        passes an indirect-result pointer in x8 (`mov x19, x8`
  *                        in the prologue) and the index in w0.
  * Both are what a C function returning the same struct types produces. */
-#define BMM_RVA_Input_get_mousePosition  0x42b7074u
+#define BMM_RVA_Input_get_mousePosition  0x0u
 #define BMM_G3_Input_get_mousePosition   { 0xd10083ffu, 0xa9014ffeu, 0x90004713u }
-#define BMM_RVA_Input_GetTouch           0x42b6cf4u
+#define BMM_RVA_Input_GetTouch           0x0u
 #define BMM_G3_Input_GetTouch            { 0xd101c3ffu, 0xa90557feu, 0xa9064ff4u }
 
 /* ---- UnityEngine.Input ---- */
-#define BMM_RVA_Input_get_mousePosition_Injected       0x42b70c0u
-#define BMM_G3_Input_get_mousePosition_Injected        { 0xf81e0ffeu, 0xa9014ff4u, 0x90004714u }
-#define BMM_RVA_Input_get_mousePresent                 0x42b7474u
-#define BMM_G3_Input_get_mousePresent                  { 0xa9bf4ffeu, 0x90004713u, 0x395d6268u }
-#define BMM_RVA_Input_get_touchSupported               0x42b74e0u
-#define BMM_G3_Input_get_touchSupported                { 0xa9bf4ffeu, 0x90004713u, 0x395d6268u }
-#define BMM_RVA_Input_get_touchCount                   0x42b754cu
-#define BMM_G3_Input_get_touchCount                    { 0xa9bf4ffeu, 0x90004713u, 0xf9434260u }
-#define BMM_RVA_Input_GetMouseButton                   0x42b6c40u
+#define BMM_RVA_Input_get_mousePosition_Injected       0x35d92acu
+#define BMM_G3_Input_get_mousePosition_Injected        { 0xd10083ffu, 0xa9014ffeu, 0xf00048f3u }
+#define BMM_RVA_Input_get_mousePresent                 0x35d95c8u
+#define BMM_G3_Input_get_mousePresent                  { 0xf81e0ffeu, 0xa9014ff4u, 0xf00048f4u }
+#define BMM_RVA_Input_get_touchSupported               0x35d9654u
+#define BMM_G3_Input_get_touchSupported                { 0xa9bf4ffeu, 0xf00048f3u, 0xf945be60u }
+#define BMM_RVA_Input_get_touchCount                   0x35d962cu
+#define BMM_G3_Input_get_touchCount                    { 0xa9bf4ffeu, 0xf00048f3u, 0xf945ba60u }
+#define BMM_RVA_Input_GetMouseButton                   0x0u
 #define BMM_G3_Input_GetMouseButton                    { 0xf81e0ffeu, 0xa9014ff4u, 0xb0004714u }
-#define BMM_RVA_Input_GetMouseButtonDown               0x42b6c7cu
+#define BMM_RVA_Input_GetMouseButtonDown               0x0u
 #define BMM_G3_Input_GetMouseButtonDown                { 0xf81e0ffeu, 0xa9014ff4u, 0xb0004714u }
-#define BMM_RVA_Input_GetMouseButtonUp                 0x42b6cb8u
+#define BMM_RVA_Input_GetMouseButtonUp                 0x0u
 #define BMM_G3_Input_GetMouseButtonUp                  { 0xf81e0ffeu, 0xa9014ff4u, 0xb0004714u }
-#define BMM_RVA_Input_GetTouch_Injected                0x42b6d64u
-#define BMM_G3_Input_GetTouch_Injected                 { 0xa9be57feu, 0xa9014ff4u, 0xb0004715u }
-#define BMM_RVA_Input_get_anyKey                       0x42b6f24u
-#define BMM_G3_Input_get_anyKey                        { 0xa9bf4ffeu, 0xb0004713u, 0xf9432660u }
-#define BMM_RVA_Input_get_anyKeyDown                   0x42b6f4cu
+#define BMM_RVA_Input_GetTouch_Injected                0x35d8ff0u
+#define BMM_G3_Input_GetTouch_Injected                 { 0xd101c3ffu, 0xa90557feu, 0xa9064ff4u }
+#define BMM_RVA_Input_get_anyKey                       0x35d9248u
+#define BMM_G3_Input_get_anyKey                        { 0xf81e0ffeu, 0xa9014ff4u, 0xf00048f4u }
+#define BMM_RVA_Input_get_anyKeyDown                   0x0u
 #define BMM_G3_Input_get_anyKeyDown                    { 0xa9bf4ffeu, 0xb0004713u, 0xf9432a60u }
 
 /* ---- UnityEngine.Screen ---- */
-#define BMM_RVA_Screen_get_width                        0x4234010u
-#define BMM_G3_Screen_get_width                         { 0xa9bf4ffeu, 0xb0004b13u, 0xf942fa60u }
-#define BMM_RVA_Screen_get_height                       0x4234038u
-#define BMM_G3_Screen_get_height                        { 0xa9bf4ffeu, 0xb0004b13u, 0xf942fe60u }
-#define BMM_RVA_Screen_get_dpi                          0x4234060u
-#define BMM_G3_Screen_get_dpi                           { 0xa9bf4ffeu, 0xb0004b13u, 0xf9430260u }
-#define BMM_RVA_Screen_get_currentResolution_Injected   0x4234370u
-#define BMM_G3_Screen_get_currentResolution_Injected    { 0xf81e0ffeu, 0xa9014ff4u, 0xb0004b14u }
-#define BMM_RVA_Screen_get_safeArea_Injected            0x4234444u
-#define BMM_G3_Screen_get_safeArea_Injected             { 0xf81e0ffeu, 0xa9014ff4u, 0xb0004b14u }
+#define BMM_RVA_Screen_get_width                        0x35628a4u
+#define BMM_G3_Screen_get_width                         { 0xa9bf4ffeu, 0x90004cb3u, 0xf9450e60u }
+#define BMM_RVA_Screen_get_height                       0x35628ccu
+#define BMM_G3_Screen_get_height                        { 0xa9bf4ffeu, 0x90004cb3u, 0xf9451260u }
+#define BMM_RVA_Screen_get_dpi                          0x35628f4u
+#define BMM_G3_Screen_get_dpi                           { 0xa9bf4ffeu, 0x90004cb3u, 0xf9451660u }
+#define BMM_RVA_Screen_get_currentResolution_Injected   0x356291cu
+#define BMM_G3_Screen_get_currentResolution_Injected    { 0xd10083ffu, 0xa9014ffeu, 0x90004cb3u }
+#define BMM_RVA_Screen_get_safeArea_Injected            0x35629ecu
+#define BMM_G3_Screen_get_safeArea_Injected             { 0xf81e0ffeu, 0xa9014ff4u, 0x90004cb4u }
 
 /* ---- UnityEngine.Display ---- */
-#define BMM_RVA_Display_get_systemWidth                  0x4233830u
+#define BMM_RVA_Display_get_systemWidth                  0x0u
 #define BMM_G3_Display_get_systemWidth                   { 0xd100c3ffu, 0xa90157feu, 0xa9024ff4u }
-#define BMM_RVA_Display_get_systemHeight                 0x4233918u
+#define BMM_RVA_Display_get_systemHeight                 0x0u
 #define BMM_G3_Display_get_systemHeight                  { 0xd100c3ffu, 0xa90157feu, 0xa9024ff4u }
-#define BMM_RVA_Display_get_renderingWidth               0x42336b4u
+#define BMM_RVA_Display_get_renderingWidth               0x0u
 #define BMM_G3_Display_get_renderingWidth                { 0xd100c3ffu, 0xa90157feu, 0xa9024ff4u }
-#define BMM_RVA_Display_get_renderingHeight              0x423379cu
+#define BMM_RVA_Display_get_renderingHeight              0x0u
 #define BMM_G3_Display_get_renderingHeight               { 0xd100c3ffu, 0xa90157feu, 0xa9024ff4u }
 
 /* ---- PlayEveryWare.EpicOnlineServices.EOSManager.EOSSingleton ----
@@ -413,3 +414,4 @@ void bm_prefs_flush_now(void);  /* shutdown/suspend: flush unconditionally    */
 int bm_steptrace_install(so_module *il2cpp);
 
 #endif /* BM_MANAGED_H */
+```
