@@ -374,7 +374,7 @@ static void oc_setup(void) {
   static VirtmemReservation *oc_res = NULL;
   void *win = NULL;
   size_t win_bytes = (size_t)3072 * 1024 * 1024;
-  while (win_bytes >= (size_t)1536 * 1024 * 1024) {
+  while (win_bytes >= (size_t)512 * 1024 * 1024) {
     size_t req = win_bytes + MMAP_ARENA_ALIGN;
     virtmemLock();
     void *raw_win = virtmemFindStack(req, 0);
@@ -385,7 +385,7 @@ static void oc_setup(void) {
       break;
     }
     win = NULL;
-    win_bytes -= (size_t)512 * 1024 * 1024;
+    win_bytes -= (size_t)256 * 1024 * 1024;
   }
   if (!win || !oc_res) {
     debugPrintf("[oc] virtmemFindStackArea failed -- running without OC\n");
@@ -393,7 +393,7 @@ static void oc_setup(void) {
   }
 
   void *pool = NULL;
-  size_t pool_bytes = (size_t)512 * 1024 * 1024;
+  size_t pool_bytes = (size_t)384 * 1024 * 1024;
   while (pool_bytes >= (size_t)256 * 1024 * 1024) {
     pool = memalign(0x1000, pool_bytes);
     if (pool) break;
