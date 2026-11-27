@@ -377,7 +377,7 @@ static void oc_setup(void) {
   while (win_bytes >= (size_t)1536 * 1024 * 1024) {
     size_t req = win_bytes + MMAP_ARENA_ALIGN;
     virtmemLock();
-    void *raw_win = virtmemFindStack(req);
+    void *raw_win = virtmemFindStack(req, 0);
     if (raw_win) oc_res = virtmemAddReservation(raw_win, req);
     virtmemUnlock();
     if (raw_win && oc_res) {
