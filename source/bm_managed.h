@@ -146,6 +146,13 @@ void bm_time_tick(void);
 #define BMM_G3_Input_GetTouch_Injected                 { 0xd101c3ffu, 0xa90557feu, 0xa9064ff4u }
 #define BMM_RVA_Input_get_anyKey                       0x35d9284u
 #define BMM_G3_Input_get_anyKey                        { 0xa9bf4ffeu, 0xf00048f3u, 0xf945aa60u }
+
+#define BMM_RVA_Input_GetKeyInt                        0x35d8e60u
+#define BMM_G3_Input_GetKeyInt                         { 0xf81e0ffeu, 0xa9014ff4u, 0x90004914u }
+#define BMM_RVA_Input_GetKeyUpInt                      0x35d8e9cu
+#define BMM_G3_Input_GetKeyUpInt                       { 0xf81e0ffeu, 0xa9014ff4u, 0x90004914u }
+#define BMM_RVA_Input_GetKeyDownInt                    0x35d8ed8u
+#define BMM_G3_Input_GetKeyDownInt                     { 0xf81e0ffeu, 0xa9014ff4u, 0x90004914u }
 #define BMM_RVA_Input_get_anyKeyDown                   0x0u
 #define BMM_G3_Input_get_anyKeyDown                    { 0xa9bf4ffeu, 0xb0004713u, 0xf9432a60u }
 
