@@ -602,11 +602,11 @@ void nxp_update(void) {
   padUpdate(&s_pad);
 
   const int docked = is_docked();
-  if (docked != s_was_docked) {
-    /* docked has no touchscreen, so make sure there is always a way to point */
-    if (s_visible < 0 || docked) s_visible = docked ? 1 : 0;
-    s_was_docked = docked;
-  }
+  s_visible = 0;
+  s_tap_prev = 0;
+  s_nev = 0;
+  if (!docked) do_touch();
+}
 
   const u64 held    = padGetButtons(&s_pad);
   const u64 pressed = padGetButtonsDown(&s_pad);
