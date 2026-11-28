@@ -174,8 +174,8 @@
  * value serves both and avoids a mid-session resolution change the engine would
  * have to handle.
  * ------------------------------------------------------------------------ */
-#define BM_FORCE_SCREEN_W 960
-#define BM_FORCE_SCREEN_H 540
+#define BM_FORCE_SCREEN_W 854
+#define BM_FORCE_SCREEN_H 480
 
 /* The resolution actually in force, defined in config.c and assigned by main.c
  * from the two constants above. Read by the touch, DPI, viewport and JNI
