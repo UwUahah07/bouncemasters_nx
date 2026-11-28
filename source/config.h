@@ -28,7 +28,7 @@
  * which of the 300-odd stubbed SDK entry points the game actually called, and
  * in what order, and guessing at that from source is a waste of a week.
  * ------------------------------------------------------------------------ */
-#define DEBUG_LOG 1
+#define DEBUG_LOG 0
 
 /* Log every JNI call the engine makes, including the ones that resolve fine.
  * Extremely verbose. Turn on only when chasing a specific hang. */
