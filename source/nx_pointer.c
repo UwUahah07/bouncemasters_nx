@@ -608,7 +608,7 @@ void nxp_update(void) {
   if (!docked) do_touch();
 }
 
-  const u64 held    = padGetButtons(&s_pad);
+ 
   const u64 pressed = padGetButtonsDown(&s_pad);
 
   /* '+' toggles the cursor; '-' toggles gyro pointing. */
