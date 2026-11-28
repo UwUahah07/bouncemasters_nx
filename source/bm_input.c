@@ -477,12 +477,48 @@ static void bmi_set_antiAliasing(int32_t v) {
 
 void bm_gfx_opt_tick(void) {
   static int gfx_applied = 0;
-  if (!gfx_applied && port_frame_count() >= 60) {
+  uint32_t f = port_frame_count();
+  if (!gfx_applied && f >= 60) {
     gfx_applied = 1;
     bmi_set_shadows(0);
     bmi_set_shadowDistance(0.0f);
     bmi_set_softParticles(0);
     bmi_set_antiAliasing(0);
+    if (g_resolve_icall) {
+      void (*set_casc)(int32_t) = (void (*)(int32_t))g_resolve_icall(
+          "UnityEngine.QualitySettings::set_shadowCascades(System.Int32)");
+      if (set_casc) set_casc(0);
+      void (*set_mip)(int32_t) = (void (*)(int32_t))g_resolve_icall(
+          "UnityEngine.QualitySettings::set_globalTextureMipmapLimit(System.Int32)");
+      if (set_mip) set_mip(1);
+    }
+  }
+
+  if (g_resolve_icall && f >= 60 && (f % 60) == 0) {
+    void *(*get_main)(void) = (void *(*)(void))g_resolve_icall(
+        "UnityEngine.Camera::get_main_Injected()");
+    void *cam = get_main ? get_main() : NULL;
+    if (cam) {
+      void (*set_hdr)(void *, int32_t) = (void (*)(void *, int32_t))g_resolve_icall(
+          "UnityEngine.Camera::set_allowHDR_Injected(System.IntPtr,System.Boolean)");
+      if (set_hdr) set_hdr(cam, 0);
+
+      void (*set_msaa)(void *, int32_t) = (void (*)(void *, int32_t))g_resolve_icall(
+          "UnityEngine.Camera::set_allowMSAA_Injected(System.IntPtr,System.Boolean)");
+      if (set_msaa) set_msaa(cam, 0);
+
+      void (*set_occ)(void *, int32_t) = (void (*)(void *, int32_t))g_resolve_icall(
+          "UnityEngine.Camera::set_useOcclusionCulling_Injected(System.IntPtr,System.Boolean)");
+      if (set_occ) set_occ(cam, 1);
+
+      float (*get_far)(void *) = (float (*)(void *))g_resolve_icall(
+          "UnityEngine.Camera::get_farClipPlane_Injected(System.IntPtr)");
+      void (*set_far)(void *, float) = (void (*)(void *, float))g_resolve_icall(
+          "UnityEngine.Camera::set_farClipPlane_Injected(System.IntPtr,System.Single)");
+      if (get_far && set_far && get_far(cam) > 140.0f) {
+        set_far(cam, 140.0f);
+      }
+    }
   }
 
   static uint64_t last_tick = 0, boost_until = 0, cooldown_until = 0;
