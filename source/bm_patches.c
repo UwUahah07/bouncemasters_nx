@@ -183,12 +183,10 @@ int bm_apply_patches(void) {
               P_RET_OPENSL, 2);
 
   /* [2] FMOD OpenSL buffer-geometry bound check -> always pass. */
-#if 0
   patch_words("audio/fmod-bufgeom",
               GAME_RVA_FMOD_BUFGEOM_BRANCH,
               GUARD_FMOD_BUFGEOM_BRANCH,
               P_FMOD_BRANCH, 1);
-#endif
 
   /* [3] APK filesystem handler -> decline every path.
    *
@@ -205,7 +203,6 @@ int bm_apply_patches(void) {
    * success, and the output is silent forever. Full derivation in bm_offsets.h.
    * Applied as two independent single-word patches so a guard mismatch on one
    * does not silently half-apply the other. */
-#if 0
   {
     static const uint32_t period_mov[] = { PATCH_FMOD_PERIOD_MOV };
     static const uint32_t period_str[] = { PATCH_FMOD_PERIOD_STR };
@@ -220,7 +217,6 @@ int bm_apply_patches(void) {
     patch_words("audio/fmod-upfront-buffers",
                 GAME_RVA_FMOD_BUFCOUNT, GUARD_FMOD_BUFCOUNT, bufcount, 1);
   }
-#endif
 #endif
 
   /* [4a] Choreographer: force the context branch to the API-level check.
