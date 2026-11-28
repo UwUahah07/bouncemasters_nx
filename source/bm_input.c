@@ -442,6 +442,66 @@ static int32_t bmi_MyInput_GetButtonUp(void *action_str) {
   return !v && prev;
 }
 
+/* Graphics quality overrides and opportunistic CPU boost during load stalls. */
+typedef void *(*il2cpp_resolve_icall_fn)(const char *name);
+static il2cpp_resolve_icall_fn g_resolve_icall = NULL;
+
+static void bmi_set_shadows(int32_t v) {
+  (void)v;
+  if (!g_resolve_icall) return;
+  void (*fn)(int32_t) = (void (*)(int32_t))g_resolve_icall(
+      "UnityEngine.QualitySettings::set_shadows(UnityEngine.ShadowQuality)");
+  if (fn) fn(0);
+}
+static void bmi_set_shadowDistance(float v) {
+  (void)v;
+  if (!g_resolve_icall) return;
+  void (*fn)(float) = (void (*)(float))g_resolve_icall(
+      "UnityEngine.QualitySettings::set_shadowDistance(System.Single)");
+  if (fn) fn(0.0f);
+}
+static void bmi_set_softParticles(int32_t v) {
+  (void)v;
+  if (!g_resolve_icall) return;
+  void (*fn)(int32_t) = (void (*)(int32_t))g_resolve_icall(
+      "UnityEngine.QualitySettings::set_softParticles(System.Boolean)");
+  if (fn) fn(0);
+}
+static void bmi_set_antiAliasing(int32_t v) {
+  (void)v;
+  if (!g_resolve_icall) return;
+  void (*fn)(int32_t) = (void (*)(int32_t))g_resolve_icall(
+      "UnityEngine.QualitySettings::set_antiAliasing(System.Int32)");
+  if (fn) fn(0);
+}
+
+void bm_gfx_opt_tick(void) {
+  static int gfx_applied = 0;
+  if (!gfx_applied && port_frame_count() >= 60) {
+    gfx_applied = 1;
+    bmi_set_shadows(0);
+    bmi_set_shadowDistance(0.0f);
+    bmi_set_softParticles(0);
+    bmi_set_antiAliasing(0);
+  }
+
+  static uint64_t last_tick = 0, boost_until = 0, cooldown_until = 0;
+  static int boost_on = 0;
+  uint64_t now = armGetSystemTick();
+  uint64_t freq = armGetSystemTickFreq();
+  if (boost_on && now >= boost_until) {
+    appletSetCpuBoostMode(ApmCpuBoostMode_Normal);
+    boost_on = 0;
+    cooldown_until = now + freq * 2ULL;
+  } else if (!boost_on && last_tick != 0 && now >= cooldown_until &&
+             (now - last_tick) > (freq / 2ULL)) {
+    appletSetCpuBoostMode(ApmCpuBoostMode_FastLoad);
+    boost_on = 1;
+    boost_until = now + freq * 3ULL;
+  }
+  last_tick = now;
+}
+
 /* ---------------------------------------------------------------- install */
 
 int bm_input_install(so_module *il2cpp) {
@@ -501,6 +561,14 @@ int bm_input_install(so_module *il2cpp) {
   n += bm_managed_hook(il2cpp, "MyInputManager.GetButton",     BMM_RVA_MyInput_GetButton,     g_mib,  (void *)&bmi_MyInput_GetButton);
   n += bm_managed_hook(il2cpp, "MyInputManager.GetButtonDown", BMM_RVA_MyInput_GetButtonDown, g_mibd, (void *)&bmi_MyInput_GetButtonDown);
   n += bm_managed_hook(il2cpp, "MyInputManager.GetButtonUp",   BMM_RVA_MyInput_GetButtonUp,   g_mibu, (void *)&bmi_MyInput_GetButtonUp);
+
+  g_resolve_icall = (il2cpp_resolve_icall_fn)so_symbol(il2cpp, "il2cpp_resolve_icall");
+  static const uint32_t g_qs[3] = { 0xf81e0ffeu, 0xa9014ff4u, 0xd0004c94u };
+  n += bm_managed_hook(il2cpp, "QualitySettings.set_shadows",        0x03564ca4u, g_qs, (void *)&bmi_set_shadows);
+  n += bm_managed_hook(il2cpp, "QualitySettings.set_shadowDistance", 0x03564ce0u, g_qs, (void *)&bmi_set_shadowDistance);
+  n += bm_managed_hook(il2cpp, "QualitySettings.set_softParticles",  0x03564dccu, g_qs, (void *)&bmi_set_softParticles);
+  n += bm_managed_hook(il2cpp, "QualitySettings.set_antiAliasing",   0x03564e44u, g_qs, (void *)&bmi_set_antiAliasing);
+
   debugPrintf("[input] %d/19 Input accessors hooked (touch + mouse emulation)\n", n);
   if (n == 0)
     debugPrintf("[input] NONE installed -- the game will be unplayable. Regenerate\n"

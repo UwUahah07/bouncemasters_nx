@@ -38,9 +38,9 @@
 typedef struct ANativeWindow ANativeWindow;     /* == NWindow* at runtime */
 typedef struct ALooper       ALooper;
 
-/* ==========================================================================
+/* ===========================================================================
  * dock-aware screen state (also read by unity_jni.c's Display getters)
- * ========================================================================== */
+ * =========================================================================== */
 static u32 g_w = 720, g_h = 1280;   /* fbstub45 PORTRAIT (stable) */
 extern int screen_width, screen_height;   /* the render resolution main.c resolved (config/auto) */
 
@@ -55,9 +55,9 @@ void android_native_update_mode(void){
 u32 android_native_width(void)  { return g_w; }
 u32 android_native_height(void) { return g_h; }
 
-/* ==========================================================================
+/* ===========================================================================
  * ANativeWindow  ->  libnx NWindow
- * ========================================================================== */
+ * =========================================================================== */
 /* fbstub45: pin the displayed region to exactly the dimensions Unity renders
  * into. nwindowSetDimensions may allocate a width-aligned (e.g. 720 -> 768)
  * swapchain buffer; without a matching crop the compositor can scan the extra
@@ -141,11 +141,11 @@ int32_t  ANativeWindow_setBuffersGeometry(ANativeWindow *w, int32_t width, int32
   return 0;
 }
 
-/* ==========================================================================
+/* ===========================================================================
  * ALooper -- Unity uses it as a per-thread wait/wake primitive (not real fd
  * polling), so a condvar-backed looper is sufficient. If the engine turns out
  * to register real fds, port cr3_nx's fake-fd PollItem layer in here.
- * ========================================================================== */
+ * =========================================================================== */
 #define ALOOPER_POLL_WAKE     (-1)
 #define ALOOPER_POLL_TIMEOUT  (-3)
 #define MAX_LOOPERS 16
@@ -208,10 +208,10 @@ int ALooper_addFd(ALooper *l,int fd,int ident,int events,void *cb,void *data){
   (void)l;(void)fd;(void)ident;(void)events;(void)cb;(void)data; return 1; }
 int ALooper_removeFd(ALooper *l,int fd){ (void)l;(void)fd; return 1; }
 
-/* ==========================================================================
+/* ===========================================================================
  * Sensors -- report none. (CR3 imported no ASensorManager; Unity does, so these
  * must exist and return a clean empty state rather than be missing symbols.)
- * ========================================================================== */
+ * =========================================================================== */
 void *ASensorManager_getInstance(void){ static int x; return &x; }
 void *ASensorManager_getInstanceForPackage(const char *p){ (void)p; return ASensorManager_getInstance(); }
 int   ASensorManager_getSensorList(void *m, void **list){ (void)m; if(list)*list=NULL; return 0; }
@@ -239,14 +239,14 @@ void android_get_orientation(float *x, float *y, float *z){
   if (z) *z = 0.0f;
 }
 
-/* ==========================================================================
+/* ===========================================================================
  * HID polling -> Unity input.
  * Unity ingests input through the Java UnityPlayer (touch -> nativeInjectEvent /
  * key path). The exact native event struct is engine-internal: recover the
  * registered "injectEvent"/"nativePointer*" method from libunity's JNI_OnLoad
  * (PORTING_PLAN.md S4) and fill in feed_one_touch(). Until then this reads HID
  * but doesn't yet hand it to the engine.
- * ========================================================================== */
+ * =========================================================================== */
 /* HID -> Unity input. The Switch touchscreen passes straight through (all fingers) into
  * the slot tracker in bm_touch.c, which bouncemasters_input.c reads.
  * (badpiggies_nx instead fed il2cpp UnityEngine.Input hooks here; those were
@@ -311,7 +311,9 @@ void android_native_input_init(void){
 #endif
 }
 
+void bm_gfx_opt_tick(void);
 void android_native_feed_hid(void){
+  bm_gfx_opt_tick();
   padUpdate(&g_pad);
   nxp_update();                                     /* reads pad/touch/mouse/gyro, builds events */
 
