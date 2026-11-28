@@ -295,12 +295,10 @@ static int keycode_held(int32_t kc) {
     case 115: case 274: return ls.y < -dz || (h & HidNpadButton_Down);   /* S / Down */
     case 97:  case 276: return ls.x < -dz || (h & HidNpadButton_Left);   /* A / Left */
     case 100: case 275: return ls.x >  dz || (h & HidNpadButton_Right);  /* D / Right */
-    case 13:  return (h & HidNpadButton_A)  != 0;                        /* Return -> A */
-    case 32:  return (h & HidNpadButton_B)  != 0;                        /* Space  -> B (Jump) */
-    case 27:  return (h & HidNpadButton_Y)  != 0;                        /* Escape -> Y (Pause) */
-    case 113: case 9: return (h & HidNpadButton_X) != 0;                 /* Q/Tab  -> X */
-    case 101: case 102: return (h & HidNpadButton_ZR) != 0;              /* E/F    -> ZR (Interact) */
-    case 304: return (h & HidNpadButton_ZL) != 0;                        /* LShift -> ZL */
+    case 13:  case 101: case 102: return (h & HidNpadButton_A)  != 0;    /* Return/E/F -> A */
+    case 27:  return (h & HidNpadButton_B)  != 0;                        /* Escape -> B (Cancel) */
+    case 32:  return (h & HidNpadButton_ZR) != 0;                        /* Space -> ZR (Jump) */
+    case 304: return (h & HidNpadButton_ZL) != 0;                        /* LShift -> ZL (Slide) */
     default:  return 0;
   }
 }
@@ -358,13 +356,19 @@ static float ob_stick_norm(int32_t v) {
 static float bmi_MyInput_GetAxis(void *action_str) {
   u64 h = 0; HidAnalogStickState ls = {0}, rs = {0};
   ob_pad_poll(&h, &ls, &rs);
-  if (il2cpp_str_eq(action_str, "Move Horizontal")) {
+  if (il2cpp_str_eq(action_str, "Move Horizontal") ||
+      il2cpp_str_eq(action_str, "UIHorizontal") ||
+      il2cpp_str_eq(action_str, "Horizontal") ||
+      il2cpp_str_eq(action_str, "DPadHorizontal")) {
     float v = ob_stick_norm(ls.x);
     if (h & HidNpadButton_Right) v =  1.0f;
     if (h & HidNpadButton_Left)  v = -1.0f;
     return v;
   }
-  if (il2cpp_str_eq(action_str, "Move Vertical")) {
+  if (il2cpp_str_eq(action_str, "Move Vertical") ||
+      il2cpp_str_eq(action_str, "UIVertical") ||
+      il2cpp_str_eq(action_str, "Vertical") ||
+      il2cpp_str_eq(action_str, "DPadVertical")) {
     float v = ob_stick_norm(ls.y);
     if (h & HidNpadButton_Up)   v =  1.0f;
     if (h & HidNpadButton_Down) v = -1.0f;
@@ -386,28 +390,30 @@ static int ob_action_held(void *action_str, int *slot_out) {
   ob_pad_poll(&h, NULL, NULL);
   if (il2cpp_str_eq(action_str, "Jump")) {
     if (slot_out) *slot_out = 0;
-    return (h & HidNpadButton_B) != 0;
+    return (h & HidNpadButton_ZR) != 0;
   }
   if (il2cpp_str_eq(action_str, "Interact")) {
     if (slot_out) *slot_out = 1;
-    return (h & HidNpadButton_ZR) != 0;
+    return (h & HidNpadButton_A) != 0;
   }
   if (il2cpp_str_eq(action_str, "Pause")) {
     if (slot_out) *slot_out = 2;
-    return (h & HidNpadButton_Y) != 0;
+    return (h & HidNpadButton_Plus) != 0;
   }
-  if (il2cpp_str_eq(action_str, "Confirm") || il2cpp_str_eq(action_str, "Submit")) {
+  if (il2cpp_str_eq(action_str, "Confirm") || il2cpp_str_eq(action_str, "Submit") ||
+      il2cpp_str_eq(action_str, "UISubmit")) {
     if (slot_out) *slot_out = 3;
     return (h & HidNpadButton_A) != 0;
   }
-  if (il2cpp_str_eq(action_str, "Cancel") || il2cpp_str_eq(action_str, "Back")) {
+  if (il2cpp_str_eq(action_str, "Cancel") || il2cpp_str_eq(action_str, "Back") ||
+      il2cpp_str_eq(action_str, "UICancel")) {
     if (slot_out) *slot_out = 4;
     return (h & HidNpadButton_B) != 0;
   }
   if (il2cpp_str_eq(action_str, "Ability") || il2cpp_str_eq(action_str, "Dash") ||
       il2cpp_str_eq(action_str, "Slide")   || il2cpp_str_eq(action_str, "Crouch")) {
     if (slot_out) *slot_out = 5;
-    return (h & (HidNpadButton_X | HidNpadButton_ZL)) != 0;
+    return (h & HidNpadButton_ZL) != 0;
   }
   if (slot_out) *slot_out = -1;
   return 0;
