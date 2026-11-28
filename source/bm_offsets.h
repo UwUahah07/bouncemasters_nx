@@ -488,8 +488,8 @@
  *     write32(base + GAME_RVA_GetAndroidAudioOutputType + 4, 0xd65f03c0); // ret
  */
 #define AUDIO_SELECT_OPENSL                     2
-#define GAME_RVA_GetAndroidAudioOutputType      0x00a54114u  /* 388 b */
-#define GUARD_GetAndroidAudioOutputType         0xd10203ffu  /* sub sp, sp, #0x80 */
+#define GAME_RVA_GetAndroidAudioOutputType      0x0091cbacu  /* 396 b */
+#define GUARD_GetAndroidAudioOutputType         0xd101c3ffu  /* sub sp, sp, #0x70 */
 
 /* [2] Defeat FMOD's OpenSL buffer-geometry bound check.
  *
