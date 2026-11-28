@@ -562,7 +562,7 @@ int bm_input_install(so_module *il2cpp) {
   n += bm_managed_hook(il2cpp, "MyInputManager.GetButtonDown", BMM_RVA_MyInput_GetButtonDown, g_mibd, (void *)&bmi_MyInput_GetButtonDown);
   n += bm_managed_hook(il2cpp, "MyInputManager.GetButtonUp",   BMM_RVA_MyInput_GetButtonUp,   g_mibu, (void *)&bmi_MyInput_GetButtonUp);
 
-  g_resolve_icall = (il2cpp_resolve_icall_fn)so_symbol(il2cpp, "il2cpp_resolve_icall");
+  g_resolve_icall = (il2cpp_resolve_icall_fn)so_try_find_addr_rx(il2cpp, "il2cpp_resolve_icall");
   static const uint32_t g_qs[3] = { 0xf81e0ffeu, 0xa9014ff4u, 0xd0004c94u };
   n += bm_managed_hook(il2cpp, "QualitySettings.set_shadows",        0x03564ca4u, g_qs, (void *)&bmi_set_shadows);
   n += bm_managed_hook(il2cpp, "QualitySettings.set_shadowDistance", 0x03564ce0u, g_qs, (void *)&bmi_set_shadowDistance);
